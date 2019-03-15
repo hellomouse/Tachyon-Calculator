@@ -10,6 +10,8 @@
     <body>
         <!-- TODO move to own file -->
         <script>
+            /* Load the title bar buttons */
+            const winFunc = require('./public/js/taskbar.js');
             /* Variables */
             let secondPressed = false;
             let autocompleteFuncParen = true;
@@ -19,6 +21,7 @@
              * mark new cursor position (optional) */
             function addChar(char) {
                 let input = document.getElementById('main-input');
+                input.focus();
                 let val = input.value;
                 let ss = input.selectionStart;
 
@@ -232,7 +235,6 @@
              * require in the background */
             setTimeout(() => {
                 require('./renderer.js');
-                const winFunc = require('./public/js/taskbar.js');
             }, 50);
         </script>
     </body>
