@@ -1,21 +1,17 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "tachyon-calculator",
+  "version": "0.1.0",
+  "description": "A calculator yay",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/hellomouse/tachyon-calculator",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "calculator"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Bowserinator <bowserinator@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^4.0.7"
   },

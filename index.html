@@ -10,6 +10,10 @@
     <body>
         <!-- TODO move to own file -->
         <script>
+            /* Load the title bar buttons */
+            const winFunc = require('./public/js/taskbar.js');
+            const d3 = require('d3');
+
             /* Variables */
             let secondPressed = false;
             let autocompleteFuncParen = true;
@@ -238,9 +242,6 @@
             setTimeout(() => {
                 require('./renderer.js');
             });
-
-            const winFunc = require('./public/js/taskbar.js');
-            const d3 = require('d3');
         </script>
     </body>
 </html>
