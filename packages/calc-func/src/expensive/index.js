@@ -51,76 +51,201 @@ function formatPrimeFactorization(vals) {
     return ans.join(' ⋅ ');
 }
 
-/* Prime factorization, override */
-const primeFactors = math.typed('factorization', {
-    'number': function (num) {
-        if (num === 0) return [];
+/* Prime factorization */
+function primeFactorsNum(num, disp = true) {
+    if (num === 0) return [];
+    if (num === 1) return [1];
 
-        /* Precision check */
-        if (num > Number.MAX_SAFE_INTEGER)
-            throw new errors.PrecisionError('Number is too large and will lose precision; this function cannot return an accurate value (Consider using BigNumber?)');
+    /* Precision check */
+    if (num > Number.MAX_SAFE_INTEGER)
+        throw new errors.PrecisionError('Number is too large and will lose precision; this function cannot return an accurate value (Consider using BigNumber?)');
 
-        /* Iterate all primes from 1-7000 ish
-         * until number is equal to 1, covers most
-         * prime factors */
-        let factors = [];
-        for (let prime of primes) {
+    /* Iterate all primes from 1-7000 ish
+     * until number is equal to 1, covers most
+     * prime factors */
+    let factors = [];
+    for (let prime of primes) {
+        if (num === 1) break;
+        while (num % prime === 0) {
+            factors.push(prime);
+            num /= prime;
+        }
+    }
+    /* Number contains large prime factors */
+    if (num !== 1) {
+        let startTime = new Date();
+        for (let prime = primes[primes.length - 1]; prime < math.sqrt(num); prime += 2) {
             if (num === 1) break;
+            if (new Date() - startTime > state.maxFuncRunTime)
+                throw new errors.TimeoutError('Calculation timed out, factors so far are<br>' +
+                    formatPrimeFactorization(factors));
+
             while (num % prime === 0) {
                 factors.push(prime);
                 num /= prime;
             }
         }
-        /* Number contains large prime factors */
-        if (num !== 1) {
-            let startTime = new Date();
-            for (let prime = primes[primes.length - 1]; prime < math.sqrt(num); prime += 2) {
-                if (num === 1) break;
-                if (new Date() - startTime > state.maxFuncRunTime)
-                    throw new errors.TimeoutError('Calculation timed out, factors so far are<br>' +
-                        formatPrimeFactorization(factors));
+        /* Number itself is prime */
+        if (num !== 1) factors.push(num);
+    }
+    if (disp) renderer.addData(formatPrimeFactorization(factors), true);
+    return factors;
+}
 
-                while (num % prime === 0) {
-                    factors.push(prime);
-                    num /= prime;
-                }
-            }
-            /* Number itself is prime */
-            if (num !== 1) factors.push(num);
+function primeFactorsBigNum(num, disp = true) {
+    if (num.equals(0)) return [];
+    if (num.equals(1)) return [math.bignumber(1)];
+
+    /* Same as above function */
+    let factors = [];
+    for (let prime of primes) {
+        if (num.equals(1)) break;
+        while (num.mod(prime).equals(0)) {
+            factors.push(prime);
+            num = num.div(prime);
         }
-        renderer.addData(formatPrimeFactorization(factors), true);
-        return factors;
-    },
-
-    'BigNumber': function (num) {
-        if (num.equals(0)) return [];
-
-        /* Same as above function */
-        let factors = [];
-        for (let prime of primes) {
+    }
+    if (!num.equals(1)) {
+        let startTime = new Date();
+        for (let prime = math.bignumber(primes[primes.length - 1]); prime.lessThan(math.sqrt(num)); prime.add(2)) {
             if (num.equals(1)) break;
+            if (new Date() - startTime > state.maxFuncRunTime)
+                throw new errors.TimeoutError('Calculation timed out, factors so far are<br>' +
+                    formatPrimeFactorization(factors));
+
             while (num.mod(prime).equals(0)) {
                 factors.push(prime);
                 num = num.div(prime);
             }
         }
-        if (!num.equals(1)) {
-            let startTime = new Date();
-            for (let prime = math.bignumber(primes[primes.length - 1]); prime.lessThan(math.sqrt(num)); prime.add(2)) {
-                if (num.equals(1)) break;
-                if (new Date() - startTime > state.maxFuncRunTime)
-                    throw new errors.TimeoutError('Calculation timed out, factors so far are<br>' + 
-                        formatPrimeFactorization(factors));
+        if (!num.equals(1)) factors.push(num);
+    }
+    if (disp) renderer.addData(formatPrimeFactorization(factors), true);
+    return factors;
+}
 
-                while (num.mod(prime).equals(0)) {
-                    factors.push(prime);
-                    num = num.div(prime);
-                }
-            }
-            if (!num.equals(1)) factors.push(num);
+/* Prime factorization, override */
+const primeFactors = math.typed('factorization', {
+    'number': primeFactorsNum,
+    'number, boolean': primeFactorsNum,
+    'BigNumber': primeFactorsBigNum,
+    'BigNumber, boolean': primeFactorsBigNum
+});
+
+/* Counts number of divisors of number, including
+ * 1 and itself */
+const divisorCount = math.typed('divisorCount', {
+    'number': function (num) {
+        /* Get prime exponents */
+        if (num === 0) return NaN;
+        if (num === 1) return 1;
+
+        let counts = {};
+        let vals = math.primeFactors(num, false);
+        for (let val of vals)
+            counts[val] = counts[val] ? counts[val] + 1 : 1;
+
+        let sum = 1;
+        for (let key of Object.keys(counts))
+            sum *= counts[key] + 1;
+        return sum;
+    },
+
+    'BigNumber': function (num) {
+        if (num.equals(0)) return NaN;
+        if (num.equals(1)) return math.bignumber(1);
+
+        let counts = {};
+        let vals = math.primeFactors(num, false);
+        for (let val of vals)
+            counts[val] = counts[val] ? counts[val] + 1 : 1;
+
+        let sum = math.bignumber(1);
+        for (let key of Object.keys(counts))
+            sum = sum.mul(math.bignumber(counts[key] + 1));
+        return sum;
+    }
+});
+
+/* Counts number of divisors of number, including
+ * 1 and itself */
+const divisorSum = math.typed('divisorSum', {
+    'number': function (num) {
+        /* Get prime exponents */
+        if (num === 0) return 0;
+        if (num === 1) return 1;
+
+        let counts = {};
+        let vals = math.primeFactors(num, false);
+        for (let val of vals)
+            counts[val] = counts[val] ? counts[val] + 1 : 1;
+
+        let sum = 1;
+        for (let key of Object.keys(counts))
+            sum *= (key ** (counts[key] + 1) - 1) / (key - 1);
+        return sum;
+    },
+
+    'BigNumber': function (num) {
+        if (num.equals(0)) return math.bignumber(0);
+        if (num.equals(1)) return math.bignumber(1);
+
+        let counts = {};
+        let vals = math.primeFactors(num, false);
+        for (let val of vals)
+            counts[val] = counts[val] ? counts[val] + 1 : 1;
+
+        let sum = math.bignumber(1);
+        for (let key of Object.keys(counts)) {
+            key = math.bignumber(key);
+            sum = sum.mul((key.pow(math.bignumber(counts[key]).add(1)).sub(1)) / (key.sub(1)));
         }
-        renderer.addData(formatPrimeFactorization(factors), true);
-        return factors;
+        return sum;
+    }
+});
+
+/* Calculates the sum of a geometric sequence mod m, 
+ * where the sequence is defined as a * (1 + b + b^2 ... b^(n-1)) 
+ *
+ * Algorithim uses repeated squaring method for
+ * fast runtime, taken from https://stackoverflow.com/a/42033401
+ */
+const geoSumMod = math.typed('geoSumMod', {
+    'number, number, number': function (n, b, m) {
+        /* Input checking */
+        if (n < 0) throw new RangeError('n (value = ' + n + ') must be nonnegative');
+        if (m <= 0) throw new RangeError('m (value = ' + m + ') must be positive');
+        n = Math.floor(n);
+
+        let T = 1;
+        let e = b % m;
+        let total = 0;
+        while (n > 0) {
+            if (n & 1 === 1)
+                total = (e * total + T) % m;
+            T = ((e + 1) * T) % m;
+            e = (e * e) % m;
+            n = Math.floor(n / 2);
+        }
+        return total;
+    },
+
+    'BigNumber, BigNumber, BigNumber': function (n, b, m) {
+        if (n.lessThan(0)) throw new RangeError('n (value = ' + n + ') must be nonnegative');
+        if (m.lessThanOrEqualTo(0)) throw new RangeError('m (value = ' + m + ') must be positive');
+        n = math.floor(n);
+
+        let T = math.bignumber(1);
+        let e = b.mod(m);
+        let total = math.bignumber(0);
+        while (n.greaterThan(0)) {
+            if (n.mod(2).equals(1))
+                total = (e.mul(total).plus(T)).mod(m);
+            T = ((e.plus(1)).mul(T)).mod(m);
+            e = e.mul(e).mod(m);
+            n = math.floor(n.div(2));
+        }
+        return total;
     }
 });
 
@@ -129,5 +254,13 @@ module.exports = {
 
     factorization: primeFactors,
     primeFactors: primeFactors,
-    primeFactorization: primeFactors
+    primeFactorization: primeFactors,
+
+    divisorCount: divisorCount,
+    factorCount: divisorCount,
+    
+    divisorSum: divisorSum,
+    factorSum: divisorSum,
+
+    geoSumMod: geoSumMod
 }

@@ -327,6 +327,7 @@ button:disabled {
     top: 15%;
     z-index: 99999;
     display: none;
+    overflow: auto;
 
     max-height: 70%;
 }
@@ -382,6 +383,7 @@ button:disabled {
     background-color: #1A1A1A;
     transition: background-color 0.2s;
     font-variant: small-caps;
+    user-select: none;
 }
 
 .modal-btn:hover {
@@ -401,6 +403,7 @@ button:disabled {
     font-size: 16px;
     background-color: transparent;
     transition: background-color 0.2s;
+    user-select: none;
 }
 
 .modal-img-btn:hover {
@@ -423,6 +426,7 @@ button:disabled {
      * what you are doing */
     list-style-type: none;
     height: calc(100% - 170px); /* 170 is arbitrary buffer for title and button */
+    max-height: 320px;
     padding-left: 0;
     overflow-y: scroll;
 }
@@ -436,6 +440,7 @@ button:disabled {
     /* Do not modify unless you know
      * what you are doing */
     width: calc(100% - 40px); /* 40 = 2 * padding of ul */
+    user-select: none;
 }
 
 .modal-menu-list li:hover {
@@ -475,4 +480,30 @@ button:disabled {
     padding: 7px 14px;
     margin-top: 5px;
     margin-bottom: -15px;
+}
+
+/* D3 graph stuff, free to modify */
+.graph-line {
+    stroke: white;
+    stroke-width: 1.5px;
+    fill: none;
+}
+
+.shaded-graph {
+    stroke: none;
+    fill: rgba(255, 255, 255, 0.1);
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #ddd;
+    shape-rendering: crispEdges;
+}
+
+/* Graph for distributions in the 
+ * STAT -> DIST modals. Recommended not to modify this */
+#modal-dist-graph {
+    padding: 20px;
+    margin: 10px 0;
 }

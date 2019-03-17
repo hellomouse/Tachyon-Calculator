@@ -19,6 +19,11 @@
              * mark new cursor position (optional) */
             function addChar(char) {
                 let input = document.getElementById('main-input');
+
+                /* Ensure input is focused so selection start will return
+                 * an accurate result */
+                input.focus();
+
                 let val = input.value;
                 let ss = input.selectionStart;
 
@@ -232,8 +237,10 @@
              * require in the background */
             setTimeout(() => {
                 require('./renderer.js');
-                const winFunc = require('./public/js/taskbar.js');
-            }, 50);
+            });
+
+            const winFunc = require('./public/js/taskbar.js');
+            const d3 = require('d3');
         </script>
     </body>
 </html>

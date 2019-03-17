@@ -6,38 +6,44 @@ const Modal = require('../modal.js');
 const modal = new Modal(`
 <div style="margin: 30px">
     <h2>InvNorm</h2>
-    <table width="100%">
-        <tr>
-            <td>Area</td>
-            <td><input oninput="require('./src/state.js').modal.updateState()" type="number" class="modal-input" id="modal-x"></input></td>
-        </tr>
-        <tr>
-            <td>μ</td>
-            <td><input oninput="require('./src/state.js').modal.updateState()" type="number" class="modal-input" value="0" id="modal-u"></input></td>
-        </tr>
-        <tr>
-            <td>σ</td>
-            <td><input oninput="require('./src/state.js').modal.updateState()" type="number" class="modal-input" value="1" id="modal-s"></input></td>
-        </tr>
+    <div id="modal-dist-page-1">
+        <table width="100%">
+            <tr>
+                <td>Area</td>
+                <td><input oninput="require('./src/state.js').modal.updateState()" type="number" class="modal-input" id="modal-x"></input></td>
+            </tr>
+            <tr>
+                <td>μ</td>
+                <td><input oninput="require('./src/state.js').modal.updateState()" type="number" class="modal-input" value="0" id="modal-u"></input></td>
+            </tr>
+            <tr>
+                <td>σ</td>
+                <td><input oninput="require('./src/state.js').modal.updateState()" type="number" class="modal-input" value="1" id="modal-s"></input></td>
+            </tr>
 
-        <tr>
-            <td>Direction</td>
-            <td style="padding-left: 6px">
-                <button onclick="require('./src/state.js').modal.changeButton(1)" id="modal-btn-dist-1" class="modal-img-btn multi-active">
-                    <img src="./public/img/stat/cdf-below.png">
-                </button>
-                <button onclick="require('./src/state.js').modal.changeButton(2)" id="modal-btn-dist-2" class="modal-img-btn">
-                    <img src="./public/img/stat/cdf-above.png">
-                </button>
-                <button onclick="require('./src/state.js').modal.changeButton(3)" id="modal-btn-dist-3" class="modal-img-btn">
-                    <img src="./public/img/stat/cdf-between.png">
-                </button>
-                <button onclick="require('./src/state.js').modal.changeButton(4)" id="modal-btn-dist-4" class="modal-img-btn">
-                    <img src="./public/img/stat/cdf-outside.png">
-                </button>
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <td>Direction</td>
+                <td style="padding-left: 6px">
+                    <button onclick="require('./src/state.js').modal.changeButton(1)" id="modal-btn-dist-1" class="modal-img-btn multi-active">
+                        <img src="./public/img/stat/cdf-below.png">
+                    </button>
+                    <button onclick="require('./src/state.js').modal.changeButton(2)" id="modal-btn-dist-2" class="modal-img-btn">
+                        <img src="./public/img/stat/cdf-above.png">
+                    </button>
+                    <button onclick="require('./src/state.js').modal.changeButton(3)" id="modal-btn-dist-3" class="modal-img-btn">
+                        <img src="./public/img/stat/cdf-between.png">
+                    </button>
+                    <button onclick="require('./src/state.js').modal.changeButton(4)" id="modal-btn-dist-4" class="modal-img-btn">
+                        <img src="./public/img/stat/cdf-outside.png">
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="modal-dist-page-2">
+    </div>
+
+ 
 
     <br><br>
     <button class="modal-btn" id="cancel"

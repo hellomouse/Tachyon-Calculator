@@ -165,22 +165,27 @@ module.exports = {
 
         return distriprob.exponential.cdfSync(high, lambda) - distriprob.exponential.cdfSync(low, lambda);
     },
-    binomialpdf: function (x, trials, probSuccess) {
+    binomialpdf: function (trials, probSuccess, x) {
         /* Normalize numbers */
         x = math.number(x);
         trials = math.number(trials);
         probSuccess = math.number(probSuccess);
 
+        if (probSuccess <= 0 || probSuccess > 1)
+            throw new RangeError('0 < probSuccess < 1 must be true');
+
         return distriprob.binomial.pdfSync(x, trials, probSuccess);
     },
-    binomialcdf: function (low, high, trials, probSuccess) {
+    binomialcdf: function (trials, probSuccess, x) {
         /* Normalize numbers */
-        low = math.number(low);
-        high = math.number(high);
+        x = math.number(x);
         trials = math.number(trials);
         probSuccess = math.number(probSuccess);
 
-        return distriprob.binomial.cdfSync(high, trials, probSuccess) - distriprob.binomial.cdfSync(low, trials, probSuccess);
+        if (probSuccess <= 0 || probSuccess > 1)
+            throw new RangeError('0 < probSuccess < 1 must be true');
+
+        return distriprob.binomial.cdfSync(x, trials, probSuccess);
     },
     invBin: function (area, trials, probSuccess) {
         /* Normalize numbers */
@@ -188,6 +193,8 @@ module.exports = {
         trials = math.number(trials);
         probSuccess = math.number(probSuccess);
 
+        if (probSuccess <= 0 || probSuccess > 1)
+            throw new RangeError('0 < probSuccess < 1 must be true');
         if (Math.abs(area) > 1)
             throw new RangeError('|Area| must ≤ 1');
 
@@ -210,13 +217,12 @@ module.exports = {
 
         return distriprob.poisson.pdfSync(x, lambda)
     },
-    poissoncdf: function (low, high, lambda) {
+    poissoncdf: function (x, lambda) {
         /* Normalize numbers */
-        low = math.number(low);
-        high = math.number(high);
+        x = math.number(x);
         lambda = math.number(lambda);
 
-        return distriprob.poisson.cdfSync(high, lambda) - distriprob.poisson.cdfSync(low, lambda);
+        return distriprob.poisson.cdfSync(x, lambda);
     },
     gammapdf: function (x, shape, scale) {
         /* normalize numbers */
@@ -255,15 +261,14 @@ module.exports = {
 
         return distriprob.hypergeometric.pdfSync(sampleSuccesses, draws, successPop, totalPop);
     },
-    hypergeometriccdf: function (low, high, draws, successPop, totalPop) {
+    hypergeometriccdf: function (x, draws, successPop, totalPop) {
         /* normalize numbers */
-        low = math.number(low);
-        high = math.number(high);
+        x = math.number(x);
         draws = math.number(draws);
         successPop = math.number(successPop);
         totalPop = math.number(totalPop);
 
-        return distriprob.hypergeometric.cdfSync(high, draws, successPop, totalPop) - distriprob.hypergeometric.cdfSync(low, draws, successPop, totalPop);
+        return distriprob.hypergeometric.cdfSync(x, draws, successPop, totalPop);
     },
     invHypergeo: function (area, draws, successPop, totalPop) {
         /* normalize numbers */
@@ -277,4 +282,43 @@ module.exports = {
 
         return distriprob.hypergeometric.quantileSync(area, draws, successPop, totalPop);
     },
+    geometricpdf: function (probSuccess, x) {
+        /* Normalize numbers */
+        x = Math.floor(math.number(x));
+        probSuccess = math.number(probSuccess);
+
+        if (probSuccess <= 0 || probSuccess > 1)
+            throw new RangeError('0 < probSuccess < 1 must be true');
+        if (x <= 0)
+            throw new RangeError('x must be greater than 0');
+
+        return probSuccess * (1 - probSuccess) ** (x - 1);
+    },
+    geometriccdf: function (probSuccess, x) {
+        /* Normalize numbers */
+        x = Math.floor(math.number(x));
+        probSuccess = math.number(probSuccess);
+        let r = 1 - probSuccess;
+
+        if (probSuccess <= 0 || probSuccess > 1)
+            throw new RangeError('0 < probSuccess < 1 must be true');
+        if (x <= 0)
+            throw new RangeError('x must be greater than 0');
+
+        return probSuccess * (r ** (x + 1) - 1) / (r - 1);
+    },
+    invGeo: function (p, probSuccess) {
+        /* Normalize numbers */
+        p = math.number(p);
+        probSuccess = math.number(probSuccess);
+        let r = 1 - probSuccess;
+        
+        if (probSuccess <= 0 || probSuccess > 1)
+            throw new RangeError('0 < probSuccess < 1 must be true');
+        if (p <= 0 || p > 1)
+            throw new RangeError('0 < p < 1 must be true');
+
+        /* Solve for x in that equation from geometriccdf */
+        return Math.ceil(Math.log(p * (r - 1) / probSuccess + 1) / Math.log(r) - 1);
+    }
 }   

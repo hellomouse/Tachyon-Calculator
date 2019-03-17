@@ -54,7 +54,7 @@ let htmlList = keys.map(x => {
 
 /* The modal created */
 const modal = new Modal(`
-<div style="margin: 30px; height: 100%">
+<div style="margin: 30px">
     <h2>Distribution</h2>
     <ul class="modal-menu-list">
         ${htmlList}
