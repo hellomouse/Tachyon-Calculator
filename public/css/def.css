@@ -422,11 +422,13 @@ button:disabled {
 
 /* List of functions in a menu */
 .modal-menu-list {
+    /* Free to modify */
+    background-color: #0c0c0c;
+
     /* Do not modify unless you know
      * what you are doing */
     list-style-type: none;
-    height: calc(100% - 170px); /* 170 is arbitrary buffer for title and button */
-    max-height: 320px;
+    height: calc(70vh - 232px); /* 232 is arbitrary buffer for title, search and button */
     padding-left: 0;
     overflow-y: scroll;
 }

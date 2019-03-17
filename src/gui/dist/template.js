@@ -20,7 +20,7 @@ const variableReplace = {
     'lambda': 'λ'
 };
 
-const symmetricalFunctions = ['normal', 'chi2', 't'];
+const symmetricalFunctions = ['normal', 'chi2', 't', 'norm'];
 const discreteFunctions = ['binomial', 'geometric', 'hypergeometric'];
 
 /**
@@ -113,8 +113,6 @@ function generateInputs(funcParams) {
 function pdfCdfTemplate(func) {
     let args = getFunctionArguments(func);
 
-    //TODO auto detect cdf types that don't use low and high as parameter names
-
     /* CDF function that utilizes integer values */
     let cdfDirHtml = '';
     let isNonLowHighCdf = false;
@@ -187,12 +185,12 @@ function pdfCdfTemplate(func) {
     let xIndex = ${args.indexOf('x')};
     if (dirButton === 2)
         data[xIndex] = data[xIndex] + ' - 1';
-    else if (dirButton === 3)
+    else if (dirButton === 3) {
+        data[xIndex] = data[xIndex] + ' - 1';
         beginning = '(1 - ';
-    else if (dirButton === 4) {
-        data[0] = data[0] + ' - 1';
-        beginning = '(1 - ';
-    }`: ''
+    }
+    else if (dirButton === 4)
+        beginning = '(1 - ';`: ''
     }
 
     return beginning + '${func.name}(' + data.join(', ') + ')' + (beginning ? ')' : '');
@@ -453,6 +451,108 @@ function pdfCdfTemplate(func) {
     return modal;
 }
 
+
+/**
+ * Generate a modal object for an inverse
+ * distribution function. Output is all the
+ * arguments in order as a numeric input
+ *
+ * @param {function} func Function to generate template for
+ * @return {Modal}        Generated modal
+ */
+function invTemplate(func) {
+    let args = getFunctionArguments(func);
+
+    let modal = new Modal(`
+<div style="margin: 30px">
+    <h2>${formatFunctionName(func.name)}</h2>
+    <table width="100%">
+        ${generateInputs(args)}
+
+        <tr>
+            <td>Direction</td>
+            <td style="padding-left: 6px">
+                <button onclick="require('./src/state.js').modal.changeButton(1)" id="modal-btn-dist-1" class="modal-img-btn multi-active">
+                    <img src="./public/img/stat/cdf-below.png">
+                </button>
+                <button onclick="require('./src/state.js').modal.changeButton(2)" id="modal-btn-dist-2" class="modal-img-btn">
+                    <img src="./public/img/stat/cdf-above.png">
+                </button>
+                ${symmetricalFunctions.includes(func.name.substring(3).toLowerCase()) ? `
+                <button onclick="require('./src/state.js').modal.changeButton(3)" id="modal-btn-dist-3" class="modal-img-btn">
+                    <img src="./public/img/stat/cdf-between.png">
+                </button>
+                <button onclick="require('./src/state.js').modal.changeButton(4)" id="modal-btn-dist-4" class="modal-img-btn">
+                    <img src="./public/img/stat/cdf-outside.png">
+                </button>`: ''
+                }
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    <button class="modal-btn" id="cancel"
+            onclick="require('./src/state.js').modal.close()">
+        Cancel</button>
+
+    <button class="modal-btn" id="submit" disabled
+            onclick="require('./src/state.js').modal.addTextAndClose()">
+        Calculate</button>
+    <br>
+</div>
+`, [-1, 'auto']);
+
+    modal.createText = new Function('createText', `
+    let data = [];
+    for (let i = 0; i < ${args.length}; i++)
+        data.push(document.getElementById('modal-' + i).value);
+
+    let dirButton = 1;
+    for (let i = 1; i < 5; i++) {
+        if (document.getElementById('modal-btn-dist-' + i).classList.contains('multi-active')) {
+            dirButton = i;
+            break;
+        }
+    }
+    
+    let xIndex = ${args.indexOf('area')};
+    switch(dirButton) {
+        case 2:
+            data[xIndex] = 1 - data[xIndex];
+            break;
+        case 3:
+            data[xIndex] = data[xIndex] / 2 + 0.5;
+            break;
+        case 4:
+            data[xIndex] = -data[xIndex] / 2 + 0.5;
+            break;
+    }
+
+    return '${func.name}(' + data.join(', ') + ')';`);
+
+    modal.func = func;
+
+    modal.updateState = new Function('createText', `
+    let allTrue = true;
+    for (let i = 0; i < ${args.length}; i++) {
+        if (!document.getElementById('modal-' + i).value) {
+            allTrue = false; 
+            break;
+        }
+    }
+    if (allTrue) document.getElementById('submit').disabled = false;
+    else document.getElementById('submit').disabled = true;`);
+
+    modal.changeButton = function (id) {
+        for (let i = 1; i < args.length; i++)
+            document.getElementById('modal-btn-dist-' + i).classList.remove('multi-active');
+        document.getElementById('modal-btn-dist-' + id).classList.add('multi-active');
+    }
+
+    return modal;
+}
+
 module.exports = {
-    pdfCdfTemplate: pdfCdfTemplate
+    pdfCdfTemplate: pdfCdfTemplate,
+    invTemplate: invTemplate
 };

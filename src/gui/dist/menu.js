@@ -46,8 +46,8 @@ const stripPDFCDFInv = x => {
 }
 
 let keys = Object.keys(functions).sort((a, b) => { return stripPDFCDFInv(a) > stripPDFCDFInv(b) ? 1 : -1; });
-let htmlList = keys.map(x => {
-    return `<li onclick="require('./src/gui').dist['${x}'].show()">
+let htmlList = keys.map((x, i) => {
+    return `<li id="modal-list-item-${i}" onclick="require('./src/gui').dist['${x}'].show()">
     ${x} 
     <span class="item-desc">${getFunctionArguments(functions[x]).join(', ')}</span></li>`;
 }).join('\n');
@@ -56,6 +56,11 @@ let htmlList = keys.map(x => {
 const modal = new Modal(`
 <div style="margin: 30px">
     <h2>Distribution</h2>
+
+    <input id="modal-search" oninput="require('./src/state.js').modal.onsearch()" 
+        class="modal-input" autofocus placeholder="Search" style="width: calc(100% - 100px)"></input>
+    <label style="font-size: 32px; margin-left: 10px">	&#8981;</label>
+
     <ul class="modal-menu-list">
         ${htmlList}
     </ul>
@@ -64,7 +69,19 @@ const modal = new Modal(`
             onclick="require('./src/state.js').modal.close()">
         Cancel</button>
     <br>
-</div>
-`);
+</div>`);
+
+modal.onsearch = function() {
+    let search = document.getElementById('modal-search').value.toLowerCase();
+
+    for (let i = 0; i < keys.length; i++) {
+        let item = document.getElementById('modal-list-item-' + i);
+
+        /* There is a <span>, so check if input exists before that */
+        if (!item.innerHTML.split('<')[0].toLowerCase().includes(search))
+            item.style.display = 'none';
+        else item.style.display = 'block';
+    }
+}
 
 module.exports = modal;
