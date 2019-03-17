@@ -320,5 +320,26 @@ module.exports = {
 
         /* Solve for x in that equation from geometriccdf */
         return Math.ceil(Math.log(p * (r - 1) / probSuccess + 1) / Math.log(r) - 1);
+    },
+    cauchypdf: function (x, x0=0, scale=1) {
+        x = math.number(x);
+        x0 = math.number(x0);
+        scale = math.number(scale);
+
+        return 1 / (Math.PI * scale) * (scale ** 2) / ((x - x0) ** 2 + scale ** 2);
+    },
+    cauchycdf: function(x, x0=0, scale=1) {
+        x = math.number(x);
+        x0 = math.number(x0);
+        scale = math.number(scale);
+
+        return 1 / Math.PI * Math.atan2(x - x0, scale) + 0.5;
+    },
+    invCauchy: function(area, x0=0, scale=1) {
+        area = math.number(area);
+        x0 = math.number(x0);
+        scale = math.number(scale);
+
+        return x0 + scale * Math.tan(pi * (area - 0.5));
     }
 }   

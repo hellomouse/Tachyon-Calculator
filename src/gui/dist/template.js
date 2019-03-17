@@ -20,7 +20,8 @@ const variableReplace = {
     'lambda': 'λ'
 };
 
-const symmetricalFunctions = ['normal', 'chi2', 't', 'norm'];
+/* These functions are just, in general, symmetric not necessarily around 0 */
+const symmetricalFunctions = ['normal', 't', 'norm', 'cauchy'];
 const discreteFunctions = ['binomial', 'geometric', 'hypergeometric'];
 
 /**
