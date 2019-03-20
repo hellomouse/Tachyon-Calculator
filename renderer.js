@@ -14,7 +14,6 @@ const mainInput = document.getElementById('main-input');
 /* Clear the loading screen */
 outputDiv.innerHTML = '';
 
-
 /**
  * Sends the current text in the textb2ox for input
  * and clears the text area. Updates history state.
@@ -24,6 +23,8 @@ function sendData() {
     addData(`<small>${mainInput.value}</small>`);
     addData(commandExec(mainInput.value));
     mainInput.value = '';
+
+    hideAutocompleteArea();
 }
 
 /**
@@ -45,17 +46,29 @@ function addData(html, format=false) {
 
 /* Submit the input on enter, or on button */
 mainInput.addEventListener('keyup', event => {
+    event.preventDefault();
+
+    if (event.keyCode === 13) /* Enter key */
+        sendData();
+});
+
+/* Autocomplete tab override */
+mainInput.addEventListener('keydown', event => {
+    if (event.keyCode === 9) { /* Tab key (autocomplete) */
         event.preventDefault();
-        if (event.keyCode === 13) /* Enter key */
-            sendData();
-    });
-document.getElementById('equals-btn').addEventListener('click', event => {
-    sendData(); });
+        autocomplete.onTab(event.shiftKey);
+    }
+    else if (event.key === 'Escape' && autocomplete.current.suggestions.length > 0) {
+        removeChunk(autocomplete.current.cursor, autocomplete.current.cursor + autocomplete.current.length);
+        addCharAt(autocomplete.current.orgStr, autocomplete.current.cursor);
+        hideAutocompleteArea();
+    }
+})
 
 /* Autocomplete */
 mainInput.addEventListener('input', event => {
     event.preventDefault();
-    autocomplete();
+    autocomplete.update();
 });
 
 /* Keep text area focused if on the 
@@ -68,7 +81,7 @@ document.body.addEventListener('click', event => {
 
 /* Global key intercepts */
 document.body.addEventListener('keyup', event => {
-    if (event.key === 'Escape') /* Hide modals on escape */
+    if (event.key === 'Escape' && state.modal) /* Hide modals on escape */
         state.modal.hide();
 });
 

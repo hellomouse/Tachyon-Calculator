@@ -13,6 +13,8 @@ let state = {
 
     maxFuncRunTime: 1000, // Max runtime for some functions that are computationally expensive
                           // does not apply to all functions
+
+    enableAutocomplete: true
 };
 
 module.exports = state;

@@ -339,6 +339,14 @@ button:hover {
     transition: background-color 0.2s;
 }
 
+/* Autocomplete button highlight */
+#autocomplete-area .highlight {
+    /* Free to modify */
+    background-color: #222;
+    transition: background-color 0.2s;
+}
+
+
 /* Function autocomplete */
 #autocomplete-area .function {
     color: #777;
