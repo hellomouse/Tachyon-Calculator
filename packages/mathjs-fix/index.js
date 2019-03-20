@@ -13,3 +13,9 @@ math.typed.conversions[0].convert = function (x) {
         throw new TypeError('Cannot implicitly convert a number with >100 significant digits to BigNumber ' + '(value: ' + x + '). ' + 'Use function bignumber(x) to convert to BigNumber.');
     return new math.type.BigNumber(x);
 }
+
+/* Alias for log: ln */
+math.import({ ln: math.log });
+
+/* Alias for log base 2: lg */
+math.import({ lg: math.log2 });

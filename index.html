@@ -8,71 +8,8 @@
     </head>
     
     <body>
-        <!-- TODO move to own file -->
-        <script>
-            /* Load the title bar buttons */
-            const winFunc = require('./public/js/taskbar.js');
-            const d3 = require('d3');
-
-            /* Variables */
-            let secondPressed = false;
-            let autocompleteFuncParen = true;
-
-            /* Code to modify the input boxes used
-             * by some of the buttons. Use a ~ to
-             * mark new cursor position (optional) */
-            function addChar(char) {
-                let input = document.getElementById('main-input');
-
-                /* Ensure input is focused so selection start will return
-                 * an accurate result */
-                input.focus();
-
-                let val = input.value;
-                let ss = input.selectionStart;
-
-                if (autocompleteFuncParen && char.endsWith('(') && !char.includes('~'))
-                    char += '~)';
-
-                input.value = val.substring(0, ss) + char.replace('~', '') + val.substring(ss);
-
-                let l = char.indexOf('~') != -1 ? char.indexOf('~') : char.length;
-                input.setSelectionRange(ss + l, ss + l);
-
-                if (secondPressed) toggle2nd();
-            }
-            function addChar2nd(a, b) {
-                if (!secondPressed) addChar(a);
-                else addChar(b);
-            }
-            function clearInput() {
-                if(document.getElementById('main-input').value === '')
-                    document.getElementById('output-area').innerHTML = '';
-                document.getElementById('main-input').value = '';
-            }
-            function removeEnd() {
-                let input = document.getElementById('main-input');
-                let val = input.value;
-                let ss = input.selectionStart;
-
-                input.value = val.substring(0, ss) + val.substring(ss + 1);
-                input.setSelectionRange(ss, ss);
-            }
-            function toggle2nd() {
-                secondPressed = !secondPressed;
-                
-                // Toggle 2nd label active
-                let labels = document.getElementsByClassName('second-label');
-                Array.from(labels).forEach(el => el.classList.toggle('second-label-active'));
-
-                // Toggle primary button
-                labels = document.getElementsByClassName('has-second-btn');
-                Array.from(labels).forEach(el => el.classList.toggle('has-second-btn-active'));
-
-                // Toggle 2nd button active
-                document.getElementById('2nd-btn').classList.toggle('second-btn-active');
-            }
-        </script>
+        <!-- Load important calculator stuff, do not require -->
+        <script src="./public/js/index.js"></script>
 
         <div id="task-bar" class="task-bar">
             <img width="20px" height="20px" src="./public/img/icon-100.png" style="float: left; margin: 10px">
@@ -104,7 +41,10 @@
                 <script>document.write(process.versions.electron)</script>.
             </small>
         </div>
-        <input type="text" id="main-input" autofocus></input>
+        <div>
+            <div id="autocomplete-area" style="display: none"></div>
+            <input type="text" id="main-input" autofocus></input>
+        </div>
 
         <div id="input-area">
             <table>
@@ -182,7 +122,7 @@
                         <sup class="second-label">Func</sup><br>
                         Const
                     </button></td>
-                    <td><button class="in-btn has-second-btn">
+                    <td><button class="in-btn has-second-btn" onclick="openModal('vars.menu', 'dist.menu')">
                         <sup class="second-label">Distr</sup><br>
                         Vars
                     </button></td>

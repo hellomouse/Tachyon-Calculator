@@ -6,13 +6,10 @@ require('app-module-path').addPath('./packages'); // Add 'packages' as alt folde
 
 const commandExec = require('./src/command-executer.js');
 const state = require('./src/state.js');
+const autocomplete = require('./src/gui/autocomplete.js');
 
 const outputDiv = document.getElementById('output-area');
 const mainInput = document.getElementById('main-input');
-
-/* Modal test */
-state.modal = require('./src/gui').dist.menu;
-state.modal.show();
 
 /* Clear the loading screen */
 outputDiv.innerHTML = '';
@@ -54,6 +51,12 @@ mainInput.addEventListener('keyup', event => {
     });
 document.getElementById('equals-btn').addEventListener('click', event => {
     sendData(); });
+
+/* Autocomplete */
+mainInput.addEventListener('input', event => {
+    event.preventDefault();
+    autocomplete();
+});
 
 /* Keep text area focused if on the 
  * main page, so if user clicks a button

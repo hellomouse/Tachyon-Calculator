@@ -539,7 +539,7 @@ function invTemplate(func) {
         if (!document.getElementById('modal-' + i).value) {
             allTrue = false; 
             break;
-        }
+        } 
     }
     if (allTrue) document.getElementById('submit').disabled = false;
     else document.getElementById('submit').disabled = true;`);

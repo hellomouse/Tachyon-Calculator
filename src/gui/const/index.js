@@ -1,0 +1,4 @@
+/* Constants */
+
+'use strict';
+

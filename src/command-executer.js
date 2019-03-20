@@ -16,7 +16,6 @@ require('add-units');  // Adds more units  */
 
 math.config({ number: 'BigNumber', precision: 60 });
 
-
 /**
  * Formats the command and answer together
  * for display

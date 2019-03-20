@@ -49,6 +49,9 @@ module.exports = {
         x = math.number(x);
         df = math.number(df);
 
+        if (df < 1)
+            throw new RangeError('df msut be greater than 0');
+
         return distriprob.t.pdfSync(x, df)
     },
     tcdf: function (low, high, df) {
@@ -56,6 +59,9 @@ module.exports = {
         low = math.number(low);
         high = math.number(high);
         df = math.number(df);
+
+        if (df < 1)
+            throw new RangeError('df msut be greater than 0');
 
         return distriprob.t.cdfSync(high, df) - distriprob.t.cdfSync(low, df);
     },

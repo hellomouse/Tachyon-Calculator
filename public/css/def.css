@@ -1,13 +1,13 @@
 /* Load fonts */
 @font-face {
-  font-family: Inconsolata;
-  src: url(../fonts/roboto_light.ttf);
+    font-family: Roboto;
+    src: url(../fonts/roboto_light.ttf);
 }
 
 @font-face {
-  font-family: Inconsolata;
-  src: url(../fonts/roboto_bold.ttf);
-  font-weight: bold;
+    font-family: Roboto;
+    src: url(../fonts/roboto_bold.ttf);
+    font-weight: bold;
 }
 
 /* Scrollbar */
@@ -34,7 +34,7 @@
 /* Body */
 body {
     background-color: #0A0A0A;
-    font-family: Inconsolata, monospace !important;
+    font-family: Roboto, sans-serif !important;
 }
 
 /* Generic button modifiers, free to modify
@@ -51,6 +51,11 @@ button:disabled {
     /* Do not modify */
     cursor: not-allowed !important;
     pointer-events: all !important;
+}
+
+/* Generic button stuff, best not to touch */
+button:hover {
+    cursor: pointer;
 }
 
 /* Task bar on the top */
@@ -94,7 +99,6 @@ button:disabled {
 .win-btn:hover {
     transition: filter 0.2s, background-color 0.2s;
     filter: brightness(2);
-    cursor: pointer;
 }
 
 /* Close X button */
@@ -138,7 +142,7 @@ button:disabled {
     /* Free to modify these */
     background-color: #111;
     color: white;
-    font-family: Inconsolata;
+    font-family: Roboto;
     font-size: 24px;
 
     /* Do not modify these properties unless
@@ -195,7 +199,7 @@ button:disabled {
  * 0 1 2, CE, etc... */
 .in-btn {
     /* Free to modify these */
-    font-family: Inconsolata, monospace;
+    font-family: Roboto, monospace;
     background-color: #0c0c0c;
     color: white;
     font-size: 16px;
@@ -217,7 +221,6 @@ button:disabled {
      * you know what you're doing */
     filter: brightness(3);
     transition: filter 0.2s;
-    cursor: pointer;
 }
 
 /* Number buttons */
@@ -296,6 +299,56 @@ button:disabled {
     color: white;
     transition: color 0.2s;
 }
+
+/* Autocomplete box */
+#autocomplete-area {
+    /* Free to modify */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.95);
+
+    /* Do not modify these properties unless
+     * you know what you're doing */
+    position: fixed;
+    bottom: 43%; /* 100 - Bottom y of output-area */
+    height: 40px;
+    width: 80%;
+    right: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Buttons in autocomplete */
+#autocomplete-area button {
+    /* Free to modify */
+    color: #777;
+    background-color: transparent;
+    font-size: 14px;
+
+    /* Do not modify these properties unless
+     * you know what you're doing */
+    padding: 10px 15px;
+    outline: none;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+#autocomplete-area button:hover {
+    background-color: #111;
+    transition: background-color 0.2s;
+}
+
+/* Function autocomplete */
+#autocomplete-area .function {
+    color: #777;
+}
+
+/* Variable autocomplete */
+#autocomplete-area .constant {
+    color: rgb(106, 189, 148);
+}
+
 
 /* Black overlay for when modal is active */
 #modal-overlay {
@@ -388,7 +441,6 @@ button:disabled {
 
 .modal-btn:hover {
     /* Free to modify */
-    cursor: pointer;
     background-color: #333;
     transition: background-color 0.2s;
 }
@@ -408,7 +460,6 @@ button:disabled {
 
 .modal-img-btn:hover {
     /* Free to modify */
-    cursor: pointer;
     background-color: #333;
     transition: background-color 0.2s;
 }
@@ -493,7 +544,7 @@ button:disabled {
 
 .shaded-graph {
     stroke: none;
-    fill: rgba(255, 255, 255, 0.1);
+    fill: white;
 }
 
 .axis path,
