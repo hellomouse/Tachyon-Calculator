@@ -24,7 +24,9 @@ function sendData() {
     addData(commandExec(mainInput.value));
     mainInput.value = '';
 
+    /* Reset the autocomplete */
     hideAutocompleteArea();
+    autocomplete.current.suggestions = [];
 }
 
 /**
