@@ -20,7 +20,7 @@ const wrapButton = (i, f, index, fragment) => {
     let isFunc = math[f] instanceof Function;
     return `<button 
         class="${isFunc ? 'function' : 'constant'}" id="autocomplete-btn-${i}"
-        onclick="removeChunk(${index}, ${index + fragment.length}); 
+        onclick="removeChunk(${index}, ${index} + require('./src/gui/autocomplete.js').current.length); 
                  addCharAt('${f}${isFunc ? '(~)' : ''}', ${index}); hideAutocompleteArea(); ">${f}</button>`;
 }
 
