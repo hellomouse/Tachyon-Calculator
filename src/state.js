@@ -13,8 +13,14 @@ let state = {
 
     maxFuncRunTime: 1000, // Max runtime for some functions that are computationally expensive
                           // does not apply to all functions
+    maxHistoryItems: 1000,
 
-    enableAutocomplete: true
+    enableAutocomplete: true,
+
+    /* Command history (Not saved) */
+    history: [],
+    ans: 0,
+    historyIndex: 0, 
 };
 
 module.exports = state;

@@ -112,6 +112,8 @@ function onTab(reverseOrder=false) {
     if (current.suggestions.length === 0)
         return;
 
+    autocompleteArea.style.display = 'block';
+
     /* Note: -- is not used as the index is incremented
      * AFTER TAB is pressed, so there will be a pause */
     if (reverseOrder) {

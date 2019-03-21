@@ -3,6 +3,7 @@
 'use strict';
 
 const math = require('mathjs');
+const state = require('./state.js');
 
 /* Custom packages */
 require('mathjs-fix'); // Custom modifications to mathjs
@@ -52,8 +53,15 @@ function formatError(command, name, msg) {
  * @param {string} command Command input
  */
 module.exports = function(command) {
+    /* Push the command to state history */
+    state.history.push(command);
+    if (state.history.length > state.maxHistoryItems)
+        state.history = state.history.slice(state.history.length - state.maxHistoryItems);
+
     try {
         let ans = math.eval(command);
+
+        state.ans = command;
         return formatAnswer(command, ans);
     } catch(e) {
         return formatError(command, e.name, e.message);

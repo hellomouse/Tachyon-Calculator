@@ -24,7 +24,12 @@ function sendData() {
     addData(commandExec(mainInput.value));
     mainInput.value = '';
 
+    /* Reset the autocomplete */
     hideAutocompleteArea();
+    autocomplete.current.suggestions = [];
+
+    /* Reset history index */
+    state.historyIndex = state.history.length; // Not -1 as history's length will increment when pressed
 }
 
 /**
@@ -62,6 +67,19 @@ mainInput.addEventListener('keydown', event => {
         removeChunk(autocomplete.current.cursor, autocomplete.current.cursor + autocomplete.current.length);
         addCharAt(autocomplete.current.orgStr, autocomplete.current.cursor);
         hideAutocompleteArea();
+    }
+    
+    if (state.history.length > 0) {
+        if (event.keyCode === 38) { /* Up key (history up) */
+            state.historyIndex--;
+            if (state.historyIndex < 0) state.historyIndex = state.history.length - 1;
+            mainInput.value = state.history[state.historyIndex];
+        }
+        else if (event.keyCode === 40) { /* Up key (history down) */
+            state.historyIndex++;
+            if (state.historyIndex > state.history.length - 1) state.historyIndex = 0;
+            mainInput.value = state.history[state.historyIndex];
+        }
     }
 })
 

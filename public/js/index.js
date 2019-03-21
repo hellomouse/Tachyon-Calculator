@@ -155,7 +155,7 @@ function openModal(firstModal, secondModal) {
 
     if (secondPressed) {
         modal = secondModal;
-        secondPressed = !secondPressed;
+        toggle2nd();
     }
 
     for (let key of modal.split('.'))
