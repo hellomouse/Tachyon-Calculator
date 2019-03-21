@@ -59,9 +59,8 @@ module.exports = function(command) {
         state.history = state.history.slice(state.history.length - state.maxHistoryItems);
 
     try {
-        let ans = math.eval(command);
-
-        state.ans = command;
+        let ans = math.eval(command, { Ans: state.ans });
+        state.ans = ans;
         return formatAnswer(command, ans);
     } catch(e) {
         return formatError(command, e.name, e.message);
