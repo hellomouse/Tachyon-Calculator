@@ -1,3 +1,5 @@
+/*global addChar:true*/
+
 'use strict';
 
 const modal = document.getElementById('modal');
@@ -50,6 +52,10 @@ class Modal {
         // Do nothing
     }
 
+    /**
+     * Show the modal, and autofocuses the first
+     * input within the modal
+     */
     show() {
         if (state.modal) state.modal.hide();
         state.modal = this;
@@ -65,14 +71,17 @@ class Modal {
         if (inputs.length > 0) inputs[0].focus();
     }
 
+    /** Hides the modal and removes modal HTML */
     hide() {
         modal.innerHTML = '';
         if (modal.classList.contains('active'))
             toggleModalView();
     }
 
-    // Alias for hide
-    close() { this.hide(); }
+    /** Alias for hide */
+    close() { 
+        this.hide(); 
+    }
 }
 
 module.exports = Modal;

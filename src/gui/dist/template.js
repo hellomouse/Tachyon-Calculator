@@ -6,6 +6,8 @@
  * inv: first input is area
  */
 
+/* global d3:true */
+
 const getFunctionArguments = require('get-function-arguments');
 const assert = require('assert');
 const Modal = require('../modal.js');
@@ -173,26 +175,26 @@ function pdfCdfTemplate(func) {
 
     let beginning = '';
 
-    ${isNonLowHighCdf ?
+${isNonLowHighCdf ?
         `    
-    let dirButton = 1;
-    for (let i = 1; i < 5; i++) {
-        if (document.getElementById('modal-btn-dist-' + i).classList.contains('multi-active')) {
-            dirButton = i;
-            break;
-        }
+let dirButton = 1;
+for (let i = 1; i < 5; i++) {
+    if (document.getElementById('modal-btn-dist-' + i).classList.contains('multi-active')) {
+        dirButton = i;
+        break;
     }
-    
-    let xIndex = ${args.indexOf('x')};
-    if (dirButton === 2)
-        data[xIndex] = data[xIndex] + ' - 1';
-    else if (dirButton === 3) {
-        data[xIndex] = data[xIndex] + ' - 1';
-        beginning = '(1 - ';
-    }
-    else if (dirButton === 4)
-        beginning = '(1 - ';`: ''
-    }
+}
+
+let xIndex = ${args.indexOf('x')};
+if (dirButton === 2)
+    data[xIndex] = data[xIndex] + ' - 1';
+else if (dirButton === 3) {
+    data[xIndex] = data[xIndex] + ' - 1';
+    beginning = '(1 - ';
+}
+else if (dirButton === 4)
+    beginning = '(1 - ';`: ''
+}
 
     return beginning + '${func.name}(' + data.join(', ') + ')' + (beginning ? ')' : '');
     `);
@@ -293,22 +295,22 @@ function pdfCdfTemplate(func) {
                         }
                     }
                     switch (dirButton) {
-                        case 1: // <=
-                            shadeStart = start;
-                            shadeEnd = data2[xIndex];
-                            break;
-                        case 2: // <
-                            shadeStart = start;
-                            shadeEnd = data2[xIndex] - 1;
-                            break;
-                        case 3: // >=
-                            shadeStart = data2[xIndex];
-                            shadeEnd = end;
-                            break;
-                        case 4: // >
-                            shadeStart = data2[xIndex] + 1;
-                            shadeEnd = end;
-                            break;
+                    case 1: // <=
+                        shadeStart = start;
+                        shadeEnd = data2[xIndex];
+                        break;
+                    case 2: // <
+                        shadeStart = start;
+                        shadeEnd = data2[xIndex] - 1;
+                        break;
+                    case 3: // >=
+                        shadeStart = data2[xIndex];
+                        shadeEnd = end;
+                        break;
+                    case 4: // >
+                        shadeStart = data2[xIndex] + 1;
+                        shadeEnd = end;
+                        break;
                     }
                 }
             }
@@ -343,7 +345,7 @@ function pdfCdfTemplate(func) {
                         shade.push({ x: i, y: data[data.length - 2].y });
                     shade.push({ x: i, y: y });
                 }
-            };
+            }
 
             /* Close off shaded polygon */
             if (isCDF && shade.length > 0) {
@@ -376,7 +378,7 @@ function pdfCdfTemplate(func) {
                 .attr('id', 'modal-dist-graph')
                 .attr('width', width)
                 .attr('height', height)
-                .append('g')
+                .append('g');
 
             /* X-axis */
             svg.append('g')
@@ -412,7 +414,7 @@ function pdfCdfTemplate(func) {
             document.getElementById('modal-dist-page-2').innerHTML = 
                 `<span class="error-msg"><b>${e.name}</b> ${e.message}</span>`;
         }
-    }
+    };
 
     modal.toggleGraph = function() {
         document.getElementById('modal-dist-page-2').innerHTML = '';
@@ -423,7 +425,7 @@ function pdfCdfTemplate(func) {
         document.getElementById('modal-dist-page-2').style.display =
             document.getElementById('modal-dist-page-2').style.display === 'block' ? 'none' : 'block';
             
-    }
+    };
 
     modal.updateState = new Function('createText', `
     let allTrue = true;
@@ -447,7 +449,7 @@ function pdfCdfTemplate(func) {
         for (let i = 1; i < 5; i++)
             document.getElementById('modal-btn-dist-' + i).classList.remove('multi-active');
         document.getElementById('modal-btn-dist-' + id).classList.add('multi-active');
-    }
+    };
     
     return modal;
 }
@@ -485,8 +487,7 @@ function invTemplate(func) {
                 </button>
                 <button onclick="require('./src/state.js').modal.changeButton(4)" id="modal-btn-dist-4" class="modal-img-btn">
                     <img src="./public/img/stat/cdf-outside.png">
-                </button>`: ''
-                }
+                </button>`: ''}
             </td>
         </tr>
     </table>
@@ -548,7 +549,7 @@ function invTemplate(func) {
         for (let i = 1; i < args.length; i++)
             document.getElementById('modal-btn-dist-' + i).classList.remove('multi-active');
         document.getElementById('modal-btn-dist-' + id).classList.add('multi-active');
-    }
+    };
 
     return modal;
 }

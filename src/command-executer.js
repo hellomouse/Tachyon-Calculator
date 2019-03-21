@@ -43,7 +43,7 @@ function formatAnswer(command, answer) {
  */
 function formatError(command, name, msg) {
     return formatAnswer(command, 
-                        `<span class="error-msg"><b>${name}</b> ${msg}</span>`);
+        `<span class="error-msg"><b>${name}</b> ${msg}</span>`);
 }
 
 /**
@@ -66,4 +66,4 @@ module.exports = function(command) {
     } catch(e) {
         return formatError(command, e.name, e.message);
     }
-}
+};

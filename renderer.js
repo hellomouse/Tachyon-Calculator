@@ -1,5 +1,7 @@
 /* Executed by the renderer process
- * Handles main HTML code submission */
+* Handles main HTML code submission */
+
+/*global hideAutocompleteArea removeChunk addCharAt:true*/
 
 require('cache-require-paths');
 require('app-module-path').addPath('./packages'); // Add 'packages' as alt folder for modules
@@ -81,7 +83,7 @@ mainInput.addEventListener('keydown', event => {
             mainInput.value = state.history[state.historyIndex];
         }
     }
-})
+});
 
 /* Autocomplete */
 mainInput.addEventListener('input', event => {
@@ -92,7 +94,7 @@ mainInput.addEventListener('input', event => {
 /* Keep text area focused if on the 
  * main page, so if user clicks a button
  * it doesn't lose focus */
-document.body.addEventListener('click', event => {
+document.body.addEventListener('click', () => {
     if (state.currentPage === 'main')
         mainInput.focus();
 });
@@ -106,4 +108,4 @@ document.body.addEventListener('keyup', event => {
 module.exports = {
     sendData: sendData,
     addData: addData
-}
+};

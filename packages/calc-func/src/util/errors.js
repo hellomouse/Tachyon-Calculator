@@ -17,4 +17,4 @@ class TimeoutError extends Error {
 module.exports = {
     PrecisionError: PrecisionError,
     TimeoutError: TimeoutError
-}
+};

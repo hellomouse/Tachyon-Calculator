@@ -1,9 +1,10 @@
+/*global addCharAt removeChunk:true*/
+
 /* Update the autocomplete bar */
 'use strict';
 
 const math = require('mathjs');
 const state = require('../state.js');
-const getFunctionArguments = require('get-function-arguments');
 
 /* HTML elements */
 const input = document.getElementById('main-input');
@@ -16,13 +17,13 @@ const functionNames = Object.keys(math)
     .slice(22);  // First 22 keys in mathjs are not useful functions or constants
 
 const space = ' &nbsp; ';
-const wrapButton = (i, f, index, fragment) => {
+const wrapButton = (i, f, index) => {
     let isFunc = math[f] instanceof Function;
     return `<button 
         class="${isFunc ? 'function' : 'constant'}" id="autocomplete-btn-${i}"
         onclick="removeChunk(${index}, ${index} + require('./src/gui/autocomplete.js').current.length); 
                  addCharAt('${f}${isFunc ? '(~)' : ''}', ${index}); hideAutocompleteArea(); ">${f}</button>`;
-}
+};
 
 /* Misc variables */
 let current = {
@@ -92,7 +93,7 @@ function updateAutocompleteArea() {
     suggestions2.sort((a, b) => b.length - a.length);
 
     current.suggestions = suggestions1.concat(suggestions2);
-    html = current.suggestions.map((x, i) => wrapButton(i, x, index, fragment)).join(space);
+    html = current.suggestions.map((x, i) => wrapButton(i, x, index)).join(space);
 
     if (html.length > 0) {
         autocompleteArea.style.display = 'block';
@@ -154,4 +155,4 @@ module.exports = {
     update: updateAutocompleteArea,
     onTab: onTab,
     current: current
-}
+};

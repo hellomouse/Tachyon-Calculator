@@ -43,7 +43,7 @@ const stripPDFCDFInv = x => {
     else if (t === 'bin') t = 'aaaac';
 
     return t + suffix;
-}
+};
 
 let keys = Object.keys(functions).sort((a, b) => { return stripPDFCDFInv(a) > stripPDFCDFInv(b) ? 1 : -1; });
 let htmlList = keys.map((x, i) => {
@@ -82,6 +82,6 @@ modal.onsearch = function() {
             item.style.display = 'none';
         else item.style.display = 'block';
     }
-}
+};
 
 module.exports = modal;

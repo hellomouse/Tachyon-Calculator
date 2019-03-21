@@ -1,6 +1,9 @@
 /* Main calculator JS utilities 
  * This file is loaded directly, not required */
 
+/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal */
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "[d3|winFunc]" }] */
+
 'use strict';
 
 /* Load the title bar buttons */

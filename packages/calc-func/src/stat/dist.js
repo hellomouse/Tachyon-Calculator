@@ -52,7 +52,7 @@ module.exports = {
         if (df < 1)
             throw new RangeError('df msut be greater than 0');
 
-        return distriprob.t.pdfSync(x, df)
+        return distriprob.t.pdfSync(x, df);
     },
     tcdf: function (low, high, df) {
         /* Normalize numbers */
@@ -80,7 +80,7 @@ module.exports = {
         x = math.number(x);
         df = math.number(df);
 
-        return distriprob.chi2.pdfSync(x, df)
+        return distriprob.chi2.pdfSync(x, df);
     },
     chi2cdf: function (low, high, df) {
         /* Normalize numbers */
@@ -161,7 +161,7 @@ module.exports = {
         x = math.number(x);
         lambda = math.number(lambda);
 
-        return distriprob.exponential.pdfSync(x, lambda)
+        return distriprob.exponential.pdfSync(x, lambda);
     },
     expoentialcdf: function (low, high, lambda) {
         /* Normalize numbers */
@@ -221,7 +221,7 @@ module.exports = {
         x = math.number(x);
         lambda = math.number(lambda);
 
-        return distriprob.poisson.pdfSync(x, lambda)
+        return distriprob.poisson.pdfSync(x, lambda);
     },
     poissoncdf: function (x, lambda) {
         /* Normalize numbers */
@@ -346,6 +346,6 @@ module.exports = {
         x0 = math.number(x0);
         scale = math.number(scale);
 
-        return x0 + scale * Math.tan(pi * (area - 0.5));
+        return x0 + scale * Math.tan(Math.PI * (area - 0.5));
     }
-}   
+};   

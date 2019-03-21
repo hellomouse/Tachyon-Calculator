@@ -6,4 +6,4 @@ module.exports = {
     basic: require('./src/basic'),
     display: require('./src/display'),
     expensive: require('./src/expensive')
-}
+};

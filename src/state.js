@@ -11,8 +11,8 @@ let state = {
 
     fractionType: 'normal', // normal, mixed
 
-    maxFuncRunTime: 1000, // Max runtime for some functions that are computationally expensive
-                          // does not apply to all functions
+    maxFuncRunTime: 1000, /* Max runtime for some functions that are computationally expensive
+                           * does not apply to all functions */
     maxHistoryItems: 1000,
 
     enableAutocomplete: true,

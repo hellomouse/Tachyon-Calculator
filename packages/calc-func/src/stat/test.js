@@ -85,6 +85,5 @@ p = ${returned}
             `, true);
         }
         return returned;
-    },
-    
-}   
+    },  
+};
