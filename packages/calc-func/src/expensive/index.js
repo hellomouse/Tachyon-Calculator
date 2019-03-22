@@ -13,6 +13,11 @@ setTimeout(() => { renderer = require('../../../../renderer.js'); }, 1000);
 
 const powMod = math.typed('powMod', {
     'number, number, number': function (base, exponent, modulus) {
+        if (exponent <= -1) return Math.pow(base, exponent) % modulus;
+        if (exponent === 0) return 1 % modulus;
+        if (exponent < 1)
+            return math.powerMod(base, Math.pow(exponent, -1), modulus);
+
         if (base < 1 || exponent < 0 || modulus < 1)
             return -1;
         let result = 1;
@@ -251,6 +256,7 @@ const geoSumMod = math.typed('geoSumMod', {
 
 module.exports = {
     powMod: powMod,
+    powerMod: powMod,
 
     factorization: primeFactors,
     primeFactors: primeFactors,

@@ -43,7 +43,7 @@ function sendData() {
 function addData(html, format=false) {
     if (format) {
         if (!html) return;
-        html = `<div class="special-output">${html}</div>`
+        html = `<div class="special-output">${html}</div>`;
     }
 
     // Add data and scroll to bottom

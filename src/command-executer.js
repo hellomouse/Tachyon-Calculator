@@ -8,9 +8,9 @@ const state = require('./state.js');
 /* Custom packages */
 require('mathjs-fix'); // Custom modifications to mathjs
 
+require('other-fix');   // Patching for numbers.js and other modules
 math.import(require('numbers'), { wrap: true, silent: true });
 math.import(require('numeric'), { wrap: true, silent: true });
-math.import(require('numbers-fix'), { wrap: true, silent: true });
 math.import(require('calc-func'), { wrap: false, silent: true, override: true });
 
 require('add-units');  // Adds more units  */

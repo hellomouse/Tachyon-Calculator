@@ -10,7 +10,7 @@
 
 const getFunctionArguments = require('get-function-arguments');
 const assert = require('assert');
-const Modal = require('../modal.js');
+const Modal = require('../../modal.js');
 
 const variableReplace = {
     'u': 'μ',

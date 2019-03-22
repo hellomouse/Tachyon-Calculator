@@ -1,4 +1,7 @@
 'use strict';
 module.exports = {
-    dist: require('./dist')
+    modal: {
+        dist: require('./modal/dist'),
+        const: require('./modal/const')
+    }
 };

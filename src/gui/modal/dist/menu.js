@@ -1,7 +1,7 @@
 'use strict';
 
 const getFunctionArguments = require('get-function-arguments');
-const Modal = require('../modal.js');
+const Modal = require('../../modal.js');
 const functions = require('calc-func').stat.dist;
 
 /* Generate the function list by sorting the
@@ -47,7 +47,7 @@ const stripPDFCDFInv = x => {
 
 let keys = Object.keys(functions).sort((a, b) => { return stripPDFCDFInv(a) > stripPDFCDFInv(b) ? 1 : -1; });
 let htmlList = keys.map((x, i) => {
-    return `<li id="modal-list-item-${i}" onclick="require('./src/gui').dist['${x}'].show()">
+    return `<li id="modal-list-item-${i}" onclick="require('./src/gui').modal.dist['${x}'].show()">
     ${x} 
     <span class="item-desc">${getFunctionArguments(functions[x]).join(', ')}</span></li>`;
 }).join('\n');
