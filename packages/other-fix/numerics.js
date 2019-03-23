@@ -10,6 +10,7 @@ for (let key of Object.keys(numeric)) {
         key === 'T' ||         // Don't override tesla
         key.endsWith('seq') || // Sequence functions
         key.endsWith('seqV') ||
-        key.endsWith('V'))   
+        key.endsWith('V') ||
+        key.endsWith('VS'))   
         delete numeric[key];
 }

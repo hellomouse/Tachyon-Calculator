@@ -20,4 +20,4 @@ module.exports = {
 
         return math.unit(ans, 's').to(unit);
     }
-}
+};

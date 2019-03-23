@@ -71,16 +71,23 @@ mainInput.addEventListener('keydown', event => {
         hideAutocompleteArea();
     }
     
+    /* History cycling */
     if (state.history.length > 0) {
-        if (event.keyCode === 38) { /* Up key (history up) */
-            state.historyIndex--;
-            if (state.historyIndex < 0) state.historyIndex = state.history.length - 1;
+        if (event.keyCode === 38 || event.keyCode === 40) {
+            event.preventDefault();
+        
+            if (event.keyCode === 38) { /* Up key (history up) */
+                state.historyIndex--;
+                if (state.historyIndex < 0) state.historyIndex = state.history.length - 1;
+            }
+            else if (event.keyCode === 40) { /* Up key (history down) */
+                state.historyIndex++;
+                if (state.historyIndex > state.history.length - 1) state.historyIndex = 0;
+            }
+
             mainInput.value = state.history[state.historyIndex];
-        }
-        else if (event.keyCode === 40) { /* Up key (history down) */
-            state.historyIndex++;
-            if (state.historyIndex > state.history.length - 1) state.historyIndex = 0;
-            mainInput.value = state.history[state.historyIndex];
+            mainInput.focus();
+            mainInput.setSelectionRange(mainInput.value.length, mainInput.value.length);
         }
     }
 });

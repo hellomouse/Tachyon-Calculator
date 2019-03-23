@@ -89,6 +89,7 @@ function clearInput() {
  */
 function hideAutocompleteArea() {
     document.getElementById('autocomplete-area').style.display = 'none';
+    document.getElementById('function-help').style.display = 'none';
 }
 
 /**

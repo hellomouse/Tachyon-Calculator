@@ -310,12 +310,33 @@ button:hover {
      * you know what you're doing */
     position: fixed;
     bottom: 43%; /* 100 - Bottom y of output-area */
-    height: 40px;
+    height: auto;
     width: 80%;
     right: 0;
     box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: visible;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
+/* Function help bar */
+#function-help {
+    /* Free to modify */
+    color: white;
+    background-color: black;
+
+    /* Do not modify these properties unless
+     * you know what you're doing */
+    padding: 7px 15px;
+    height: 36px;
+    max-width: 500px;
+    position: absolute;
     overflow: hidden;
-    white-space: nowrap;
+    left: 20%;
+    box-sizing: border-box;
+    bottom: calc(43% + 36.8px); /* Height of autocomplete-area + bottom of autocomplete area + 10px padding */
+    white-space: nowrap; 
     text-overflow: ellipsis;
 }
 
@@ -352,8 +373,13 @@ button:hover {
     color: #777;
 }
 
+#function-help .function {
+    color: #bfb693;
+}
+
 /* Variable autocomplete */
-#autocomplete-area .constant {
+#autocomplete-area .constant,
+#function-help .constant {
     color: rgb(106, 189, 148);
 }
 

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello World!</title>
+
+        <link rel="stylesheet" href="public/css/def.css">
+    </head>
+    
+    <body>
+        <!-- Load important calculator stuff, do not require -->
+        <script src="./public/js/index.js"></script>
+
+        <div id="task-bar" class="task-bar">
+            <img width="20px" height="20px" src="./public/img/icon-100.png" style="float: left; margin: 10px">
+
+            <div style="margin: 13px; margin-left: calc(20% - 20px); float: left">
+                RADIAN REAL &mdash; Tachyon Calculator
+            </div>
+
+            <span style="float: right">
+                <button class="win-btn" onclick="winFunc.min()">
+                    <span style="position: relative; top: -3px">🗕</span>
+                </button>
+                <button class="win-btn" onclick="winFunc.max()">🗖</button>
+                <button class="win-btn close-btn" onclick="winFunc.close()">✕</button>  
+            </span>
+        </div>
+
+        <div id="output-area">
+            <!-- Loading screen goes here (Will be cleared on load) -->
+            <br><br>
+            <h2 style="margin: 20px 0; font-weight: normal">Tachyon Calculator</h2>
+            <h4 style="margin: 0; font-weight: normal">Loading... modules</h4>
+            <small>
+                Node.js
+                <script>document.write(process.versions.node)</script>,
+                Chromium
+                <script>document.write(process.versions.chrome)</script>,
+                and Electron
+                <script>document.write(process.versions.electron)</script>.
+            </small>
+        </div>
+        <div>
+            <div id="autocomplete-area" style="display: none"></div>
+            <input type="text" id="main-input" autofocus></input>
+        </div>
+
+        <div id="input-area">
+            <table>
+                <tr>
+                    <td><button class="in-btn second-btn" id="2nd-btn" onclick="toggle2nd()">2nd</button></td>
+                    <td><button class="in-btn mem-btn has-second-btn">
+                        <sup class="second-label">Matrix</sup><br>
+                        List
+                    </button></td>
+                    <td><button class="in-btn mem-btn has-second-btn">
+                        <sup class="second-label">Hist</sup><br>
+                        Mem
+                    </button></td>
+                    <td><button class="in-btn mem-btn has-second-btn">
+                        <sup class="second-label">Rcl</sup><br>
+                        Store
+                    </button></td>
+                    <td><button class="in-btn has-second-btn" onclick="addChar2nd('^2', 'sqrt(')">
+                        <sup class="second-label">√x</sup><br>
+                        x<sup>2</sup>
+                    </button></td>
+                    <td><button class="in-btn has-second-btn" onclick="addChar2nd('^', 'pi')">
+                        <sup class="second-label">π</sup><br>
+                        <div style="transform: rotate(180deg);">﹀</div>
+                    </button></td>
+
+                    <td><button class="in-btn">DEG</button></td>
+                    <td><button class="in-btn ce-btn" onclick="clearInput()">AC</button></td>
+                    <td><button class="in-btn ce-btn" onclick="removeEnd()">DEL</button></td>
+                    <td><button class="in-btn" onclick="addChar('/')">÷</button></td>
+                </tr>
+                <tr>
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('log10(', '10^')">
+                        <sup class="second-label">10<sup>x</sup></sup><br>
+                        log
+                    </button></td>
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('log(', 'e^')">
+                        <sup class="second-label">e<sup>x</sup></sup><br>
+                        ln
+                    </button></td>
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('^(-1)', '%')">
+                            <sup class="second-label">Mod</sup><br>
+                            x<sup>-1</sup>
+                        </button></td>
+                    
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('sin(', 'asin(')">
+                        <sup class="second-label">sin<sup>-1</sup></sup><br>
+                        sin
+                    </button></td>
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('cos(', 'acos(')">
+                        <sup class="second-label">cos<sup>-1</sup></sup><br>
+                        cos
+                    </button></td>
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('tan(', 'atan(')">
+                        <sup class="second-label">tan<sup>-1</sup></sup><br>
+                        tan
+                    </button></td>
+
+                    <td><button class="in-btn num-btn" onclick="addChar('7')">7</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('8')">8</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('9')">9</button></td>
+                    <td><button class="in-btn" onclick="addChar('*')">×</button></td>
+                </tr>
+                <tr>
+                    <td><button class="in-btn func-btn has-second-btn" onclick="addChar2nd('nPr(', 'nCr(')">
+                        <sup class="second-label">nCr</sup><br>
+                        nPr
+                    </button></td>
+                    <td><button class="in-btn func-btn has-second-btn">
+                        <sup class="second-label">Uniform</sup><br>
+                        Rand
+                    </button></td>
+                    <td><button class="in-btn has-second-btn">
+                        <sup class="second-label">Func</sup><br>
+                        Const
+                    </button></td>
+                    <td><button class="in-btn has-second-btn" onclick="openModal('modal.vars.menu', 'modal.dist.menu')">
+                        <sup class="second-label">Distr</sup><br>
+                        Vars
+                    </button></td>
+                    <td><button class="in-btn has-second-btn">
+                        <sup class="second-label">Draw</sup><br>
+                        Prgm
+                    </button></td>
+                    <td><button class="in-btn has-second-btn">
+                        <sup class="second-label">Test</sup><br>
+                        Math
+                    </button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('4')">4</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('5')">5</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('6')">6</button></td>
+                    <td><button class="in-btn" onclick="addChar('-')">-</button></td>
+                </tr>
+                <tr>
+                    <td><button class="in-btn has-second-btn">
+                        <sup class="second-label">Angle</sup><br>
+                        Stat
+                    </button></td>
+                    <td><button class="in-btn symbol-btn" onclick="addChar('[')">[</button></td>
+                    <td><button class="in-btn symbol-btn" onclick="addChar(']')">]</button></td>
+                    <td><button class="in-btn const-btn" onclick="addChar('x')"><i>x</i></button></td>
+                    <td><button class="in-btn const-btn" onclick="addChar('i')"><i>i</i></button></td>
+                    <td><button class="in-btn const-btn" onclick="addChar('e')">e</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('1')">1</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('2')">2</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('3')">3</button></td>
+                    <td><button class="in-btn" onclick="addChar('+')">+</button></td>
+                </tr>
+                <tr>
+                    <td><button class="in-btn symbol-btn" onclick="addChar('&quot;')">"</button></td>
+                    <td><button class="in-btn symbol-btn" onclick="addChar(',')">,</button></td>
+                    <td><button class="in-btn" onclick="addChar('!')">n!</button></td>
+                    <td><button class="in-btn symbol-btn" onclick="addChar('(')">(</button></td>
+                    <td><button class="in-btn symbol-btn" onclick="addChar(')')">)</button></td>
+                    <td><button class="in-btn" onclick="addChar('Ans')">Ans</button></td>
+
+                    <td><button class="in-btn" onclick="addChar('-')">±</button></td>
+                    <td><button class="in-btn num-btn" onclick="addChar('0')">0</button></td>
+                    <td><button class="in-btn" onclick="addChar('.')">.</button></td>
+                    <td><button class="in-btn" id="equals-btn" onclick="require('./renderer.js').sendData()">=</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="modal-container">
+            <div id="modal-overlay"></div>
+            <div id="modal">hi</div>
+        </div>
+
+        <script>
+            /* Set timeout to allow the HTML to render first,
+             * giving an appearance of loading while modules
+             * require in the background */
+            setTimeout(() => {
+                require('./renderer.js');
+            });
+        </script>
+    </body>
+</html>

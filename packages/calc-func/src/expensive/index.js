@@ -20,6 +20,7 @@ const powMod = math.typed('powMod', {
 
         if (base < 1 || exponent < 0 || modulus < 1)
             return -1;
+            
         let result = 1;
         while (exponent > 0) {
             if ((exponent % 2) === 1)
@@ -31,8 +32,14 @@ const powMod = math.typed('powMod', {
     },
 
     'BigNumber, BigNumber, BigNumber': function (base, exponent, modulus) {
+        if (exponent.lessThanOrEqualTo(-1)) return base.pow(exponent).mod(modulus);
+        if (exponent.equals(0)) return math.bignumber(1).mod(modulus);
+        if (exponent.lessThan(1))
+            return math.powerMod(base, math.bignumber(1).div(exponent), modulus);
+
         if (base.lessThan(1) || exponent.lessThan(0) || modulus.lessThan(1))
             return math.bignumber(-1);
+
         let result = math.bignumber(1);
         while (exponent.greaterThan(0)) {
             if ((exponent.mod(2)).equals(1))

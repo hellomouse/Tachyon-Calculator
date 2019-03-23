@@ -3,6 +3,7 @@
 
 const numbers = require('numbers');
 const math = require('mathjs');
+const mathjsFix = require('mathjs-fix');
 
 /* Wrap all number functions to convert big numbers to
  * numbers as numbers does typeof checking */
@@ -29,16 +30,26 @@ function wrapNumType(fn) {
 function wrapAllFunctions(obj) {
     for (let key of Object.keys(obj)) {
         if (obj[key] instanceof Function) {
+            /* Add to help function index */
+            mathjsFix[key] = obj[key];
             obj[key] = wrapNumType(obj[key]);
         }
         else wrapAllFunctions(obj[key]);
     }
 }
 
-/* Since numbers.js does type checking and is incompatiable
- * with big number and fraction modes, we'll do a little rounding */
-wrapAllFunctions(numbers);
-
 /* Rename prime.simple in numbers.js as isPrime */
 numbers['isPrime'] = numbers.prime.simple;
 delete numbers.prime.simple;
+
+/* Add NCR as alias for binomial */
+numbers['nCr'] = numbers.basic.binomial;
+numbers['ncr'] = numbers.basic.binomial;
+
+/* NPR function */
+numbers['nPr'] = (n, k) => { return numbers.basic.factorial(k) * numbers.basic.binomial(n, k); };
+numbers['npr'] = numbers.nPr;
+
+/* Since numbers.js does type checking and is incompatiable
+ * with big number and fraction modes, we'll do a little rounding */
+wrapAllFunctions(numbers);

@@ -12,10 +12,52 @@ math.typed.conversions[0].convert = function (x) {
     if (digits(x) > 100)
         throw new TypeError('Cannot implicitly convert a number with >100 significant digits to BigNumber ' + '(value: ' + x + '). ' + 'Use function bignumber(x) to convert to BigNumber.');
     return new math.type.BigNumber(x);
-}
+};
 
 /* Alias for log: ln */
 math.import({ ln: math.log });
 
 /* Alias for log base 2: lg */
 math.import({ lg: math.log2 });
+
+/* Hack to add a reference to the original function
+ * when adding a typed function to mathjs */
+let allFunctions = {}; // Dir of original function reference
+
+const wrapMathTyped = function(fn) {
+    return function() {
+        /* Add the function to a universial array
+         * of all math js functions */
+        if (arguments.length > 1) {
+            let temp = arguments[1];
+            temp = temp ? temp[Object.keys(temp)[1]] : false;
+
+            if (temp && !arguments[0].startsWith('_'))
+                allFunctions[arguments[0]] = temp;
+        }
+        return fn.apply(this, arguments);
+    };
+};
+math.typed = wrapMathTyped(math.typed);
+
+const iterateObjToAddFunc = function(obj) {
+    for (let key of Object.keys(obj)) {
+        if (obj[key] instanceof Function && obj[key].name !== 'anonymous'
+                && !obj[key].name.startsWith('_') && obj[key].name) {
+            allFunctions[obj[key].name] = obj[key];
+        }
+        else if (typeof obj[key] === 'object')
+            iterateObjToAddFunc(obj[key]);
+    }
+};
+const wrapMathImport = function(fn) {
+    return function() {
+        /* Add imported functions to math array ONLY
+         * if it a vanilla js function (not typed) */
+        if (arguments.length > 0) iterateObjToAddFunc(arguments[0]);
+        return fn.apply(this, arguments);
+    };
+};
+math.import = wrapMathImport(math.import);
+
+module.exports = allFunctions;
