@@ -329,13 +329,15 @@ button:hover {
     /* Do not modify these properties unless
      * you know what you're doing */
     padding: 7px 15px;
-    height: 36px;
-    max-width: 500px;
-    position: absolute;
+    height: 36.8px;
+    position: fixed;
     overflow: hidden;
     left: 20%;
     box-sizing: border-box;
-    bottom: calc(43% + 36.8px); /* Height of autocomplete-area + bottom of autocomplete area + 10px padding */
+
+    bottom: 43%; /* Same as autocomplete-area */
+    width: 80%;
+
     white-space: nowrap; 
     text-overflow: ellipsis;
 }

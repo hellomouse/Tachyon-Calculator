@@ -40,14 +40,10 @@ let current = {
 
 /**
  * Generate help html output
+ * @param {string} name Name of function to get help for
  */
-function generateHelpText() {
-    let func = null;
-
-    if (current.suggestions.length > 0) {
-        name = current.suggestions[current.index];
-        func = funcData[name] ? funcData[name] : math[name];
-    }
+function generateHelpText(name) {
+    let func = funcData[name] ? funcData[name] : math[name];
 
     if (func instanceof Function) {
         /* Wrapper, builtin math.js function */
@@ -69,11 +65,26 @@ function generateHelpText() {
 }
 
 /**
- * Updates the HTML for the help text, should be run
- * when autocomplete is cycled
+ * Updates the HTML for the help text
+ * @param {string} name Name of function to get help for
  */
-function updateHelpText() {
-    functionHelp.innerHTML = generateHelpText();
+function updateHelpText(name) {
+    functionHelp.innerHTML = generateHelpText(name);
+}
+
+/**
+ * Display the help for constants if
+ * autocomplete has 1 suggestion and it
+ * is not a function
+ */
+function displayConstantHelp() {
+    /* Display help if variable */
+    functionHelp.style.display = 'none';
+    if (current.suggestions.length === 1 && autocompleteArea.innerHTML.includes('class="constant"')) {
+        autocompleteArea.style.display = 'none';
+        functionHelp.style.display = 'block';
+        updateHelpText(current.suggestions[0]);
+    } 
 }
 
 /**
@@ -106,12 +117,35 @@ function updateAutocompleteArea() {
     if (fragment.length < 2) {
         autocompleteArea.style.display = 'none';
         functionHelp.style.display = 'none';
-        return;
-    }
 
-    // todo binary search the function names or index with buckets
-    //      or some way to make searching a 800 item list more efficent
-    // display function args if the fragment matches a name exactly
+        /* Count backwards from the last (, if it matches a function
+         * name try to display the help. 
+         *
+         * Ie if the current value is
+         * test(0, 1|), it will count backwards from the cursor (|),
+         * returning the substring 'test' */
+        let startIndex = -1;
+        let index = 0;
+
+        for (let i = ss - 1; i >= 0; i--) {
+            let char = val.substring(i, i + 1);
+
+            if (char === '(' && allowedChars.includes(val.substring(i - 1, i)))
+                startIndex = i;
+            else if (startIndex !== -1 && !allowedChars.includes(val.substring(i, i + 1))) {
+                index = i + 1;
+                break;
+            }
+        }
+        
+        if (startIndex !== -1) {
+            functionHelp.style.display = 'block';
+            updateHelpText(val.substring(index, startIndex));
+        }
+
+        return;
+    } else if (/^\d+$/g.test(fragment)) // Only number shouldn't be autocompleted
+        return;
 
     current.index = 0;
     current.length = fragment.length;
@@ -137,12 +171,11 @@ function updateAutocompleteArea() {
     current.suggestions = suggestions1.concat(suggestions2);
     
     html = current.suggestions.map((x, i) => wrapButton(i, x, index)).join(space);
-    updateHelpText();
 
     if (html.length > 0) {
         autocompleteArea.style.display = 'block';
         autocompleteArea.innerHTML = html;
-        functionHelp.style.display = 'block';
+        displayConstantHelp();
     } else {
         autocompleteArea.style.display = 'none';
         functionHelp.style.display = 'none';
@@ -160,7 +193,8 @@ function onTab(reverseOrder=false) {
         return;
 
     autocompleteArea.style.display = 'block';
-    functionHelp.style.display = 'block';
+    functionHelp.style.display = 'none';
+    displayConstantHelp();
 
     /* Note: -- is not used as the index is incremented
      * AFTER TAB is pressed, so there will be a pause */
@@ -180,7 +214,7 @@ function onTab(reverseOrder=false) {
         f += '(~)';
 
     /* Update help text */
-    updateHelpText();
+    updateHelpText(current.suggestions[0]);
 
     /* Remove old autocomplete and add new one */
     removeChunk(current.cursor, current.cursor + current.length);
