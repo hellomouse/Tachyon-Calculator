@@ -342,6 +342,13 @@ button:hover {
     text-overflow: ellipsis;
 }
 
+/* Little extra description for function purpose
+ * if doc exists */
+#function-help .help-doc {
+    color: grey; 
+    margin-left: 20px;
+}
+
 /* Buttons in autocomplete */
 #autocomplete-area button {
     /* Free to modify */
@@ -546,7 +553,8 @@ button:hover {
 
     /* Do not modify unless you know
      * what you are doing */
-    width: 70%;
+    max-width: 70%;
+    width: auto;
     text-align: right;
     float: right;
     text-overflow: ellipsis;
@@ -595,4 +603,10 @@ button:hover {
 #modal-dist-graph {
     padding: 20px;
     margin: 10px 0;
+}
+
+/* An image loaded with loadImage */
+.internet-image {
+    max-width: 60vw;
+    max-height: 100vh;
 }

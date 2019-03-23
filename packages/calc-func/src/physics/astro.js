@@ -10,6 +10,7 @@ module.exports = {
     // TODO newton's laws, escape velocity, orbital period, etc...
 
     timeDilation: function (t, v, c = 299792458) {
+        /* @help Calculate t' at a given velocity */
         /* Normalize units */
         t = normalize.toNumber(t, 's');
         v = normalize.toNumber(v, 'm/s');

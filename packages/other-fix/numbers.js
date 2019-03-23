@@ -3,7 +3,7 @@
 
 const numbers = require('numbers');
 const math = require('mathjs');
-const mathjsFix = require('mathjs-fix');
+const mathjsFix = require('mathjs-fix').allFunctions;
 
 /* Wrap all number functions to convert big numbers to
  * numbers as numbers does typeof checking */

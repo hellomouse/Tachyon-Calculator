@@ -13,6 +13,7 @@ setTimeout(() => { renderer = require('../../../../renderer.js'); }, 1000);
 
 const powMod = math.typed('powMod', {
     'number, number, number': function (base, exponent, modulus) {
+        /* @help Fast calculation for base ^ exponent % modulus */
         if (exponent <= -1) return Math.pow(base, exponent) % modulus;
         if (exponent === 0) return 1 % modulus;
         if (exponent < 1)
@@ -32,6 +33,7 @@ const powMod = math.typed('powMod', {
     },
 
     'BigNumber, BigNumber, BigNumber': function (base, exponent, modulus) {
+        /* @help Fast calculation for base ^ exponent % modulus */
         if (exponent.lessThanOrEqualTo(-1)) return base.pow(exponent).mod(modulus);
         if (exponent.equals(0)) return math.bignumber(1).mod(modulus);
         if (exponent.lessThan(1))
@@ -65,6 +67,7 @@ function formatPrimeFactorization(vals) {
 
 /* Prime factorization */
 function primeFactorsNum(num, disp = true) {
+    /* @help Return an array of prime factors. disp=true shows formatted answer */
     if (num === 0) return [];
     if (num === 1) return [1];
 
@@ -83,7 +86,7 @@ function primeFactorsNum(num, disp = true) {
             num /= prime;
         }
     }
-    /* Number contains large prime factors */
+    /* Number contains large prime factors. */
     if (num !== 1) {
         let startTime = new Date();
         for (let prime = primes[primes.length - 1]; prime < math.sqrt(num); prime += 2) {
@@ -105,6 +108,7 @@ function primeFactorsNum(num, disp = true) {
 }
 
 function primeFactorsBigNum(num, disp = true) {
+    /* @help Return an array of prime factors. disp=true shows formatted answer */
     if (num.equals(0)) return [];
     if (num.equals(1)) return [math.bignumber(1)];
 
@@ -148,6 +152,7 @@ const primeFactors = math.typed('factorization', {
  * 1 and itself */
 const divisorCount = math.typed('divisorCount', {
     'number': function (num) {
+        /* @help Count the number of divisors, including 1 and itself */
         /* Get prime exponents */
         if (num === 0) return NaN;
         if (num === 1) return 1;
@@ -164,6 +169,7 @@ const divisorCount = math.typed('divisorCount', {
     },
 
     'BigNumber': function (num) {
+        /* @help Count the number of divisors, including 1 and itself */
         if (num.equals(0)) return NaN;
         if (num.equals(1)) return math.bignumber(1);
 
@@ -179,10 +185,11 @@ const divisorCount = math.typed('divisorCount', {
     }
 });
 
-/* Counts number of divisors of number, including
+/* Sum divisors of number, including
  * 1 and itself */
 const divisorSum = math.typed('divisorSum', {
     'number': function (num) {
+        /* @help Sum of the divisors, including 1 and itself */
         /* Get prime exponents */
         if (num === 0) return 0;
         if (num === 1) return 1;
@@ -199,6 +206,7 @@ const divisorSum = math.typed('divisorSum', {
     },
 
     'BigNumber': function (num) {
+        /* @help Sum of the divisors, including 1 and itself */
         if (num.equals(0)) return math.bignumber(0);
         if (num.equals(1)) return math.bignumber(1);
 
@@ -224,6 +232,7 @@ const divisorSum = math.typed('divisorSum', {
  */
 const geoSumMod = math.typed('geoSumMod', {
     'number, number, number': function (n, b, m) {
+        /* @help Fast mod for geometric sum a + ab + ... ab^(n-1) % m */
         /* Input checking */
         if (n < 0) throw new RangeError('n (value = ' + n + ') must be nonnegative');
         if (m <= 0) throw new RangeError('m (value = ' + m + ') must be positive');
@@ -243,6 +252,7 @@ const geoSumMod = math.typed('geoSumMod', {
     },
 
     'BigNumber, BigNumber, BigNumber': function (n, b, m) {
+        /* @help Fast mod for geometric sum a + ab + ... ab^(n-1) % m */
         if (n.lessThan(0)) throw new RangeError('n (value = ' + n + ') must be nonnegative');
         if (m.lessThanOrEqualTo(0)) throw new RangeError('m (value = ' + m + ') must be positive');
         n = math.floor(n);

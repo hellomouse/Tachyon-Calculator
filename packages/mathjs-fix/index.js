@@ -3,7 +3,6 @@
 
 const math = require('mathjs');
 const digits = require(require.resolve('mathjs').replace('index.js', '') + 'src/utils/number').digits;
-const getFunctionArguments = require('get-function-arguments');
 
 /* Ignore the error for implict conversions from number
  * to BigNumber, where precision is lost, as all calculator
@@ -21,10 +20,46 @@ math.import({ ln: math.log });
 /* Alias for log base 2: lg */
 math.import({ lg: math.log2 });
 
+/* Rename coulomb's constant from coulomb to coulombsConstant
+ * and add alias for the faraday (faraday's constant)
+ *
+ * The originals will technically
+ * still exist in the calculations, but be hidden from autocompletes and
+ * modals */
+math.import({ coulombsConstant: math.coulomb }, { override: true });
+math.import({ faradayConstant: math.faraday }, { override: true });
+
+/* Overwrite coulomb with the unit */
+math.import({ coulomb: math.createUnit('coulomb', { definition: '1 C' }, { override: true }) }, { override: true });
+
+/* Don't log coulomb and faradaysConstant into autocomplete */
+delete math.coulomb;
+delete math.faradayConstant;
+
+
 /* Hack to add a reference to the original function
  * when adding a typed function to mathjs */
 let allFunctions = {}; // Dir of original function reference
 let typedFunctions = {}; // Dir of typed functions
+let helpDocs = {};   // Dir of docs
+
+/**
+ * Add a function help, if it exists
+ * @param {string}   name Name of function
+ * @param {function} func Function
+ */
+function addToHelpDocs(name, func) {
+    let lines = func.toString().split('\n');
+    for (let line of lines) {
+        if (line.includes('/*') && line.includes('*/')) {
+            line = line.split('*/')[0].split('/*')[1].trim();
+            if (!line.startsWith('@help'))
+                continue;
+            helpDocs[name] = line.split('@help')[1].trim();
+            break;
+        }
+    }
+}
 
 /**
  * Add a function to all functions. If a function is typed
@@ -44,11 +79,13 @@ function addFunction(name, func) {
         if (fString.includes('arguments') && fString.includes('return generic.apply')) {
             if (typedFunctions[func.name]) {
                 allFunctions[name] = typedFunctions[func.name];
+                addToHelpDocs(name, typedFunctions[func.name]);
                 return true;
             }
             return false;
         }
         allFunctions[name] = func;
+        addToHelpDocs(name, func);
         return true;
     }
     return false;
@@ -65,6 +102,7 @@ const wrapMathTyped = function(fn) {
             if (temp && !arguments[0].startsWith('_')) {
                 allFunctions[arguments[0]] = temp;
                 typedFunctions[arguments[0]] = temp;
+                addToHelpDocs(arguments[0], temp);
             }
         }
         return fn.apply(this, arguments);
@@ -90,4 +128,7 @@ const wrapMathImport = function(fn) {
 };
 math.import = wrapMathImport(math.import);
 
-module.exports = allFunctions;
+module.exports = {
+    allFunctions: allFunctions,
+    helpDocs: helpDocs
+};

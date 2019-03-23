@@ -26,6 +26,7 @@ function getDirectionSymbol(direction) {
 
 module.exports = {
     TwoPropZTest: function(x1, n1, x2, n2, direction='not', showWork=true) {
+        /* @help Conduct a Z-test on two independent proportions */
         /* Normalize numbers */
         x1 = math.number(x1);
         n1 = math.number(n1);

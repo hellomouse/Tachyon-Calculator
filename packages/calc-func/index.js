@@ -5,5 +5,6 @@ module.exports = {
     physics: require('./src/physics'),
     basic: require('./src/basic'),
     display: require('./src/display'),
-    expensive: require('./src/expensive')
+    expensive: require('./src/expensive'),
+    nonmath: require('./src/nonmath')
 };

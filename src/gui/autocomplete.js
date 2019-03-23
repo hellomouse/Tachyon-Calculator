@@ -6,7 +6,8 @@
 const math = require('mathjs');
 const state = require('../state.js');
 
-const funcData = require('mathjs-fix');
+const funcData = require('mathjs-fix').allFunctions;
+const helpDocs = require('mathjs-fix').helpDocs;
 const getFunctionArguments = require('get-function-arguments');
 
 /* HTML elements */
@@ -47,11 +48,20 @@ function generateHelpText(name) {
 
     if (func instanceof Function) {
         /* Wrapper, builtin math.js function */
-        if (func.toString().includes('fn.apply'))
-            return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: [Unknown arguments]`;
+        
+        /* If it's a builtn function, maybe we can get some documentation
+         * using math.help (Which throws an error if name doesn't exist) */
+        let helpText = '';
+        try { helpText = math.help(name).doc.description; } 
+        catch(e) { helpText = helpDocs[name] ? helpDocs[name] : ''; }
+
+        if (helpText) helpText = `<span class="help-doc">${helpText}</span<`;
+
+        if (func.toString().includes('generic.apply') || func.toString().includes('fn.apply'))
+            return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: [Unknown arguments]${helpText}`;
 
         let help = getFunctionArguments(func);
-        return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: ${help.join(', ')}`;
+        return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: ${help.join(', ')}${helpText}`;
     }
     else if (math.type.isUnit(func)) {
         return `<span class="constant">&#1008;&nbsp;&nbsp;</span> <b>${name}</b>: ${func.value} ${func.units.map(x => x.prefix.name 
