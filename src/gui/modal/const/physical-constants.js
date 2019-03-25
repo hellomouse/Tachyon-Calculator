@@ -52,9 +52,15 @@ const symbolMap = {
     'planckMass': 'm<sub>p</sub>',
     'planckTime': 't<sub>p</sub>',
     'planckCharge': 'p<sub>p</sub>',
-    'planckTemperature': 'T<sub>p</sub>'
+    'planckTemperature': 'T<sub>p</sub>',
+    'solarLuminosity': 'L<sub>☉</sub>',
+    'solarRadius': 'R<sub>☉</sub>',
+    'earthMass': 'M<sub>⊕</sub>',
+    'earthRadius': 'R<sub>⊕</sub>',
+    'solarConstant': 'G<sub>SC</sub>'
 };
-const mathkeys = Object.keys(math).filter(x => math.type.isUnit(math[x]));
+const junkConst = ['G', 'c']; // Duplicates
+const mathkeys = Object.keys(math).filter(x => math.type.isUnit(math[x]) && !junkConst.includes(x));
 mathkeys.sort();
 
 /* The modal created */
@@ -71,7 +77,7 @@ ${
     mathkeys
         .map((x, i) => {
             return `<li id="modal-list-item-${i}" onclick="addChar('${x}'); require('./src/state').modal.hide();">
-            <div style="width: 60px; display: inline-block">${symbolMap[x] ? `<b>${symbolMap[x]} </b>` : '' }</div>
+            <div style="width: 60px; display: inline-block">${symbolMap[x] ? `<i><b>${symbolMap[x]} </b></i>` : '' }</div>
             ${x} 
             <span class="item-desc">
 ${math[x].value}
@@ -98,7 +104,7 @@ modal.onsearch = function () {
         let item = document.getElementById('modal-list-item-' + i);
 
         /* There is a <span>, so check if input exists before that */
-        if (!item.innerHTML.split('<')[0].toLowerCase().includes(search))
+        if (!item.innerHTML.split('</div>')[1].toLowerCase().includes(search))
             item.style.display = 'none';
         else item.style.display = 'block';
     }

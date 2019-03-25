@@ -128,7 +128,83 @@ const wrapMathImport = function(fn) {
 };
 math.import = wrapMathImport(math.import);
 
+
+/* --- Patching for trig --- */
+/**
+ * Reduce really small trig values to 0
+ * (1e-15 is an arbitrary parameter)
+ * 
+ * @param {*} x Output value
+ */
+function formatTrigOutput(x) {
+    if (math.abs(x) < 1e-15) return 0;
+    return x; 
+}
+
+/** 
+ * Support for DEG, RAD, GRAD
+ *
+ * Import this when a config object for trig has been
+ * created, and pass it as a parameter. The config object
+ * needs a key called degMode, which toggles between
+ * 'deg', 'rad' and 'grad'
+ * 
+ * @param {object} state The config object
+ * @see https://mathjs.org/examples/browser/angle_configuration.html.html
+ */
+function modifyMathTrigToggle(state) {
+    let replacements = {};
+
+    /* Create trigonometric functions replacing the input depending on angle config */
+    const fns1 = ['sin', 'cos', 'tan', 'sec', 'cot', 'csc', 'sinh', 'cosh', 'tanh', 'sech', 'coth', 'csch'];
+    fns1.forEach(name => {
+        const fn = math[name];
+        const fnNumber = x => {
+            /* Convert input from configured type of angles to radians */
+            switch (state.degMode.toLowerCase()) {
+            case 'deg': return formatTrigOutput(fn(math.radians(x)));
+            case 'grad': return formatTrigOutput(fn(math.convertAngle(x, 'grad', 'rad')));
+            default: return formatTrigOutput(fn(x));
+            }
+        };
+
+        /* Create a typed-function which check the input types */
+        replacements[name] = math.typed(name, {
+            'number | Fraction | BigNumber | Complex': fnNumber,
+            'Array | Matrix': x => math.map(x, fnNumber),
+        });
+    });
+
+    // create trigonometric functions replacing the output depending on angle config
+    const fns2 = fns1.map(x => 'a' + x);
+    fns2.forEach(function (name) {
+        const fn = math[name];
+        const fnNumber = x => {
+            /* Convert to radians to configured type of angles*/
+            const result = fn(x);
+            if (!Number.isNaN(result)) {
+                switch (state.degMode.toLowerCase()) {
+                case 'deg': return math.degrees(result);
+                case 'grad': return math.convertAngle(result, 'rad', 'grad');
+                default: return result;
+                }
+            }
+        };
+
+        /* Create a typed-function which check the input types */
+        replacements[name] = math.typed(name, {
+            'number | BigNumber | Fraction | Complex': fnNumber,
+            'Array | Matrix': x => math.map(x, fnNumber)
+        });
+    });
+
+    /* Import all replacements into math.js, override existing trigonometric functions */
+    math.import(replacements, { override: true });
+}
+
+
 module.exports = {
     allFunctions: allFunctions,
-    helpDocs: helpDocs
+    helpDocs: helpDocs,
+    modifyMathTrigToggle: modifyMathTrigToggle
 };

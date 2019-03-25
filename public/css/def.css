@@ -77,6 +77,21 @@ button:hover {
     padding: 0;
 }
 
+/* Dropdown for number type */
+.task-bar select {
+    /* Free to modify these */
+    color: #ccc;
+    background-color: #333;
+
+    /* Do not modify these properties unless
+     * you know what you're doing */
+    border: 1px solid black;
+    outline: none;
+    padding: 5px 15px;
+    margin: 0 10px;
+    -webkit-app-region: no-drag;
+}
+
 /* Window buttons: min, max, close */
 .win-btn {
     /* Free to modify these */
@@ -606,7 +621,35 @@ button:hover {
 }
 
 /* An image loaded with loadImage */
-.internet-image {
+.internet-img {
     max-width: 60vw;
     max-height: 100vh;
+}
+
+/* Large square menu button */
+.square-btn-large {
+    color: white;
+    background-color: #1a1a1a;
+    transition: background-color 0.2s;
+    
+    /* Don't modify unless you know
+     * what you are doing */
+    width: 100px;
+    height: 100px;
+    outline: none;
+    border: none;
+    display: inline-block;
+    margin-right: 10px;
+    user-select: none;
+}
+
+.square-btn-large:hover {
+    background-color: #222;
+    transition: background-color 0.2s;
+}
+
+.square-btn-large img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
 }

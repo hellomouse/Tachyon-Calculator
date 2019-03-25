@@ -3,5 +3,6 @@
 
 module.exports = {
     circuits: require('./circuits.js'),
-    astro: require('./astro.js')
+    astro: require('./astro.js'),
+    magnetics: require('./magnetics.js')
 };

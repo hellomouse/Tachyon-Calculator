@@ -1,7 +1,7 @@
 /* Main calculator JS utilities 
  * This file is loaded directly, not required */
 
-/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal */
+/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal configMathNumber cycleAngleMode*/
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "[d3|winFunc]" }] */
 
 'use strict';
@@ -10,7 +10,14 @@
 const d3 = require('d3');
 const winFunc = require('./public/js/taskbar.js');
 
+
 /* Variables */
+/* "Hidden" variables, to avoid namespace pollution */
+let _hidden = {};
+_hidden.state = require('./src/state.js');
+_hidden.degModes = Object.keys(_hidden.state.degTypes);
+_hidden.currentAngleModeIndex = _hidden.degModes.indexOf(_hidden.state.degMode) - 1; // -1 for initial setting
+
 let secondPressed = false;
 let autocompleteFuncParen = true;
 
@@ -157,7 +164,7 @@ function openModal(firstModal, secondModal) {
     let modal = firstModal;
     let current = require('./src/gui');
 
-    if (secondPressed) {
+    if (secondPressed && secondModal) {
         modal = secondModal;
         toggle2nd();
     }
@@ -166,3 +173,40 @@ function openModal(firstModal, secondModal) {
         current = current[key];
     current.show();
 }
+
+/**
+ * Set the type of number to use in math
+ * @param {string} type Type of number
+ */
+function configMathNumber(type) {
+    const math = require('mathjs');
+
+    if (type === 'BigNumber')
+        math.config({ number: 'BigNumber', precision: require('./src/state.js').precision });
+    else if (type === 'number')
+        math.config({ number: 'number' });
+    else if (type === 'Fraction')
+        math.config({ number: 'Fraction' });
+    else throw new TypeError(`Unknown config type ${type}`);
+
+    require('./src/state.js').numType = type;
+}
+
+/**
+ * Cycle through angle settings
+ */
+function cycleAngleMode() {
+    const state = _hidden.state;
+
+    _hidden.currentAngleModeIndex = (_hidden.currentAngleModeIndex + 1) % _hidden.degModes.length;
+    state.degMode = _hidden.degModes[_hidden.currentAngleModeIndex];
+    
+    document.getElementById('angle-btn').innerHTML = state.degMode.toUpperCase();
+    document.getElementById('degModeLabel').innerHTML = state.degMode === 'deg' ?
+        state.degMode.toUpperCase() + 'REES' : state.degMode.toUpperCase() + 'IANS';
+}
+
+/* Add keyboard shortcuts */
+const { remote } = require('electron');
+const { globalShortcut } = remote;
+globalShortcut.register('CommandOrControl+A', cycleAngleMode);

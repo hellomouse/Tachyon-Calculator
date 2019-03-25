@@ -14,8 +14,17 @@ module.exports = {
     toNumber: function(val, unit) {
         if (val instanceof math.type.Unit)
             return math.number(val, unit);
-        if (typeof val === 'string')
-            return math.eval(val).value;
-        return val;
+        if (typeof val === 'string') {
+            try {return math.unit(val).toNumber(unit); }
+            catch(e) { return math.number(val); }
+        }
+        return math.number(val);
+    },
+    appendUnit: function(val, unit) {
+        if (val instanceof math.type.Unit)
+            return val.toString();
+        else if (Number.isNaN(+val))
+            return val.toString();
+        return val.toString() + ' ' + unit;
     }
-}
+};

@@ -6,8 +6,11 @@ let state = {
 
     latexPrint: false,
     dispMode: 'normal', // normal, sci, frac
-    numMode: 'number',  // number, BigNumber, Fraction, complex
+    numMode: 'number',  // number, BigNumber, Fraction
     degMode: 'rad',     // rad, deg or grad
+    degTypes: { rad: '(2*pi)', deg: 360, grad: 400 },
+
+    precision: 60,
 
     fractionType: 'normal', // normal, mixed
 
@@ -16,6 +19,12 @@ let state = {
     maxHistoryItems: 1000,
 
     enableAutocomplete: true,
+
+    format: {
+        notation: 'auto',
+        precision: 59,   // Precision - 1
+        fraction: 'ratio'
+    },
 
     /* Command history (Not saved) */
     history: [],
