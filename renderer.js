@@ -1,7 +1,7 @@
 /* Executed by the renderer process
 * Handles main HTML code submission */
 
-/*global hideAutocompleteArea removeChunk addCharAt:true*/
+/*global hideAutocompleteArea removeChunk addCharAt cycleAngleMode:true*/
 
 require('cache-require-paths');
 require('app-module-path').addPath('./packages'); // Add 'packages' as alt folder for modules
@@ -9,6 +9,8 @@ require('app-module-path').addPath('./packages'); // Add 'packages' as alt folde
 const commandExec = require('./src/command-executer.js');
 const state = require('./src/state.js');
 const autocomplete = require('./src/gui/autocomplete.js');
+
+const mouseTrap = require('mousetrap');
 
 const outputDiv = document.getElementById('output-area');
 const mainInput = document.getElementById('main-input');
@@ -111,6 +113,9 @@ document.body.addEventListener('keyup', event => {
     if (event.key === 'Escape' && state.modal) /* Hide modals on escape */
         state.modal.hide();
 });
+
+/* Add keyboard shortcuts */
+mouseTrap.bind(['ctrl+d', 'command+d'], cycleAngleMode);
 
 module.exports = {
     sendData: sendData,

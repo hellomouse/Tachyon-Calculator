@@ -205,8 +205,3 @@ function cycleAngleMode() {
     document.getElementById('degModeLabel').innerHTML = state.degMode === 'deg' ?
         state.degMode.toUpperCase() + 'REES' : state.degMode.toUpperCase() + 'IANS';
 }
-
-/* Add keyboard shortcuts */
-const { remote } = require('electron');
-const { globalShortcut } = remote;
-globalShortcut.register('CommandOrControl+A', cycleAngleMode);
