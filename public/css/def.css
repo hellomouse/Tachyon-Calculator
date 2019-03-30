@@ -693,3 +693,63 @@ button:hover {
 .output-null {
     color: #ffc7b7;
 }
+
+/* Periodic table */
+.periodic-table-container {
+    display: grid;
+    grid-template-columns: repeat(18, auto);
+    padding: 10px;
+}
+
+.periodic-table-container .element {
+    padding: 7.1px 5px;
+    text-align: center;
+    background-color: #1a1a1a;
+    color: #ddd;
+    user-select: none;
+    outline: none;
+    border: none;
+    transition: background-color 0.2s;
+}
+.periodic-table-container .element:hover {
+    cursor: pointer;
+    background-color: #222;
+    transition: background-color 0.2s;
+}
+
+/* Tiny badge to display */
+.mini-badge {
+    padding: 3px 8px;
+    background-color: transparent;
+    color: #555;
+    display: inline;
+}
+
+.scroll-to-bottom-for-output-btn {
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+    user-select: none;
+
+    /* no edit */
+    position: fixed;
+    right: 10px; /* 10px for scrollbar */
+    width: 50px;
+    height: 30px;
+    outline: none;
+    border: none;
+    bottom: 43%; /* 100 - Bottom of output-area */
+}
+
+.output-item {
+    user-select: all;
+}
+
+.btn-pulse {
+    animation: pulse 1s infinite;
+}
+
+@-webkit-keyframes pulse {
+    0%    { filter: brightness(1); }
+    50%   { filter: brightness(4.5); }
+    100%  { filter: brightness(1); }
+}

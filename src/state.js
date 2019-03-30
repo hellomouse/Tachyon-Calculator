@@ -16,7 +16,9 @@ let state = {
 
     maxFuncRunTime: 1000, /* Max runtime for some functions that are computationally expensive
                            * does not apply to all functions */
+    minTimeToBeASlowFunc: 100, /* Functions slower than this will get a loading message */
     maxHistoryItems: 1000,
+    displayDegTypeInHistory: true,
 
     enableAutocomplete: true,
 
@@ -24,6 +26,10 @@ let state = {
         notation: 'auto',
         precision: 59,   // Precision - 1
         fraction: 'ratio'
+    },
+
+    customConstants: {
+
     },
 
     /* Command history (Not saved) */

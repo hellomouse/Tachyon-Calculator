@@ -1,7 +1,7 @@
 /* Executed by the renderer process
 * Handles main HTML code submission */
 
-/*global hideAutocompleteArea removeChunk addCharAt cycleAngleMode:true*/
+/*global hideAutocompleteArea removeChunk addCharAt cycleAngleMode _hidden:true*/
 
 require('cache-require-paths');
 require('app-module-path').addPath('./packages'); // Add 'packages' as alt folder for modules
@@ -24,16 +24,35 @@ outputDiv.innerHTML = '';
  * Adds the current command added
  */
 function sendData() {
-    addData(`<small>${mainInput.value}</small>`);
-    addData(commandExec(mainInput.value));
-    mainInput.value = '';
+    if (mainInput.value.trim().length === 0) return; // No empty inputs
+
+    addData(`<small>${mainInput.value}
+    ${state.displayDegTypeInHistory ? `<div class="mini-badge" style="float: right">${state.degMode.toUpperCase()}</div></small>` : ''}`);
+
+    let randId = 'output-temp-' + Math.random();
+    addData(`<span id="${randId}"></span>`, false, false);
 
     /* Reset the autocomplete */
     hideAutocompleteArea();
     autocomplete.current.suggestions = [];
 
-    /* Reset history index */
-    state.historyIndex = state.history.length; // Not -1 as history's length will increment when pressed
+    /* Calculate the function 
+    TODO CHILDPROCESS FORK?*/
+    setTimeout(() => {
+        document.getElementById(randId).outerHTML = ''; // Delete the temp loading message
+
+        addData(commandExec(mainInput.value));
+        mainInput.value = '';
+
+        /* Reset history index */
+        state.historyIndex = state.history.length; // Not -1 as history's length will increment when pressed
+    });
+
+    /* If function is taking too long display a calculating message */
+    setTimeout(() => {
+        let temp = document.getElementById(randId);
+        if (temp) temp.innerHTML = 'Calculating output...';
+    }, state.minTimeToBeASlowFunc);
 }
 
 /**
@@ -41,21 +60,31 @@ function sendData() {
  * @param {string} html    Html output to add
  * @param {boolean} format Format the output? It ignores if the input is empty,
  *                         and adds a wrapper to differentiate
+ * @param {boolean} br     Add a <br> after the output?
  */
-function addData(html, format=false) {
+function addData(html, format = false, br = true) {
     if (format) {
         if (!html) return;
         html = `<div class="special-output">${html}</div>`;
     }
 
     // Add data and scroll to bottom
-    outputDiv.innerHTML += html + '<br>';
+    outputDiv.innerHTML += html + (br ? '<br>' : '');
     outputDiv.scrollTop = outputDiv.scrollHeight - outputDiv.clientHeight;
 }
 
 /* Submit the input on enter, or on button */
 mainInput.addEventListener('keyup', event => {
     event.preventDefault();
+
+    // If new char is a number pulse the corresponding button
+    let string = mainInput.value[mainInput.selectionEnd - 1];
+    if (string && '0123456789'.includes(string)) {
+        if (_hidden.btns.length === 0)
+            _hidden.btns = Array.from(document.getElementsByClassName('num-btn')).sort((a, b) => a.innerText > b.innerText ? 1 : -1);
+        _hidden.btns[+string].classList.add('btn-pulse');
+        setTimeout(() => { _hidden.btns[+string].classList.remove('btn-pulse'); }, 1000); // 1000 is time for the animation
+    }
 
     if (event.keyCode === 13) /* Enter key */
         sendData();

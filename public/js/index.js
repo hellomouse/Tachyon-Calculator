@@ -17,6 +17,7 @@ let _hidden = {};
 _hidden.state = require('./src/state.js');
 _hidden.degModes = Object.keys(_hidden.state.degTypes);
 _hidden.currentAngleModeIndex = _hidden.degModes.indexOf(_hidden.state.degMode) - 1; // -1 for initial setting
+_hidden.btns = [];
 
 let secondPressed = false;
 let autocompleteFuncParen = true;

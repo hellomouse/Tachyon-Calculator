@@ -79,10 +79,4 @@ module.exports = {
         return humanizeDuration(math.number(seconds) * 1000);
     },
 
-    output: function() {
-        return {key1: Math.PI, key2: 'test', key3: Math.sin};
-    },
-    output2: function() {
-        return [1,2,3,4];
-    }
 };
