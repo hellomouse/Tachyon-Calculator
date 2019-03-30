@@ -27,6 +27,29 @@ const symmetricalFunctions = ['normal', 't', 'norm', 'cauchy'];
 const discreteFunctions = ['binomial', 'geometric', 'hypergeometric'];
 
 /**
+ * Get Base name for a function, removing inv, cdf and pdf
+ * Assumes format like this:
+ * - [something]pdf
+ * - [something]cdf
+ * - inv[Something]
+ *
+ * @param {string} name Name of function
+ */
+function getBaseName(name) {
+    name = name.toLowerCase();
+
+    let baseName = name;
+    if (name.endsWith('pdf') || name.endsWith('cdf'))
+        baseName = baseName.substring(0, baseName.length - 3);
+    else if (name.startsWith('inv'))
+        baseName = baseName.substring(3);
+
+    /* Chi squared gets special character */
+    baseName = baseName.replace('chi2', 'χ<sup>2</sup>');
+    return baseName;
+}
+
+/**
  * Formats a PDF, CDF or INV function for
  * titling. Assumes format like this:
  * - [something]pdf
@@ -36,16 +59,7 @@ const discreteFunctions = ['binomial', 'geometric', 'hypergeometric'];
  * @param {string} name Name of function
  */
 function formatFunctionName(name) {
-    name = name.toLowerCase();
-
-    let baseName = name;
-    if (name.endsWith('pdf') || name.endsWith('cdf'))
-        baseName = baseName.substring(0, baseName.length -3);
-    else if (name.startsWith('inv'))
-        baseName = baseName.substring(3);
-
-    /* Chi squared gets special character */
-    baseName = baseName.replace('chi2', 'χ<sup>2</sup>');
+    let baseName = getBaseName(name);
 
     /* Title case */
     baseName = baseName.charAt(0).toUpperCase() + baseName.substring(1).toLowerCase();
@@ -66,10 +80,13 @@ function formatFunctionName(name) {
  * respectively.
  * 
  * @param {array} funcParams Array of function parameter names
+ * @param {string} funcName  Name of fucntion
  */
-function generateInputs(funcParams) {
+function generateInputs(funcParams, funcName) {
     let html = '';
     let i = 0;
+
+    funcName = getBaseName(funcName);
 
     for (let name of funcParams) {
         /* Deal with defaults gracefully */
@@ -83,6 +100,10 @@ function generateInputs(funcParams) {
         /* Deal with button HTML */
         let buttonHtml = '';
         if (name === 'high') {
+            /* High is infinite for continious non-symmetrical usually */
+            if (!defaultHtml && !symmetricalFunctions.includes(funcName) && !discreteFunctions.includes(funcName))
+                defaultHtml = 'value="1e99"';
+
             buttonHtml = `<button style="display: inline; width: 70px" class="modal-btn"
                     onclick="document.getElementById('modal-${i}').value = '1e99'; document.getElementById('modal-${i}').oninput();">+INF</button>`;
         }
@@ -146,7 +167,7 @@ function pdfCdfTemplate(func) {
 
     <div id="modal-dist-page-1" style="display: block">
         <table width="100%">
-            ${generateInputs(args)}
+            ${generateInputs(args, func.name)}
             ${cdfDirHtml}
         </table>
     </div>
@@ -202,8 +223,8 @@ else if (dirButton === 4)
     modal.func = func;
     modal.createGraph = function() {
         try {
-            const state = require('../../state.js');
-            const maxStartEnd = 10000;
+            const state = require('../../../state.js');
+            const maxStartEnd = 1000;
             const graphDivisons = 1000;
             const arbitraryEnd = 10;
 
@@ -260,7 +281,7 @@ else if (dirButton === 4)
             /* If a low input exists, set start to that, otherwise: 
             * Symmetrical starts -end, end, others 0 to end */
             let start = 0;
-            if (low !== null && low !== undefined && !isSymmetric) start = low;
+            if (low !== null && low !== undefined && !isSymmetric) start = 0; // start = low
             else if (isSymmetric)
                 start = -end;
 
@@ -418,7 +439,7 @@ else if (dirButton === 4)
 
     modal.toggleGraph = function() {
         document.getElementById('modal-dist-page-2').innerHTML = '';
-        require('../../state.js').modal.createGraph();
+        require('../../../state.js').modal.createGraph();
 
         document.getElementById('modal-dist-page-1').style.display = 
             document.getElementById('modal-dist-page-1').style.display === 'block' ? 'none' : 'block';
@@ -470,7 +491,7 @@ function invTemplate(func) {
 <div style="margin: 30px">
     <h2>${formatFunctionName(func.name)}</h2>
     <table width="100%">
-        ${generateInputs(args)}
+        ${generateInputs(args, func.name)}
 
         <tr>
             <td>Direction</td>

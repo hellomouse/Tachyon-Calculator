@@ -55,13 +55,13 @@ function generateHelpText(name) {
         try { helpText = math.help(name).doc.description; } 
         catch(e) { helpText = helpDocs[name] ? helpDocs[name] : ''; }
 
-        if (helpText) helpText = `<span class="help-doc">${helpText}</span<`;
+        if (helpText) helpText = `<span class="help-doc">${helpText}</span>`;
 
         if (func.toString().includes('generic.apply') || func.toString().includes('fn.apply'))
-            return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: [Unknown arguments]${helpText}`;
+            return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: [Unknown arguments] ${helpText}`;
 
         let help = getFunctionArguments(func);
-        return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: ${help.join(', ')}${helpText}`;
+        return `<span class="function">Ƒ&nbsp;&nbsp;</span> <b>${name}</b>: ${help.join(', ')} ${helpText}`;
     }
     else if (math.type.isUnit(func)) {
         return `<span class="constant">&#1008;&nbsp;&nbsp;</span> <b>${name}</b>: ${func.value} ${func.units.map(x => x.prefix.name 
@@ -249,5 +249,6 @@ module.exports = {
     update: updateAutocompleteArea,
     onTab: onTab,
     current: current,
-    updateHelpText: updateHelpText
+    updateHelpText: updateHelpText,
+    generateHelpText: generateHelpText
 };

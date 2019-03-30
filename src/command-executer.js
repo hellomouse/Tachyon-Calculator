@@ -5,6 +5,10 @@
 
 const math = require('mathjs');
 const state = require('./state.js');
+const util = require('./util');
+
+const formatAnswer = util.output.formatAnswer;
+const formatError = util.output.formatError;
 
 /* Custom packages */
 const mathFix = require('mathjs-fix'); // Custom modifications to mathjs
@@ -21,35 +25,6 @@ require('add-constants'); // Add more constants
 mathFix.modifyMathTrigToggle(state);
 
 configMathNumber('BigNumber');
-
-/**
- * Formats the command and answer together
- * for display
- * 
- * @param {string} command Command inputted
- * @param {string} answer Answer from mathjs
- */
-function formatAnswer(command, answer) {
-    /* Output was a mathjs function */
-    if (answer.toString().includes('function') && !answer.toString().includes('Error')
-        && answer.toString.includes('{'))
-        answer = `[function ${command}]`;
-
-    return answer;
-}
-
-/**
- * Formats the name and error of a message
- * for display
- * 
- * @param {string} command Command inputted
- * @param {string} name Name of the error
- * @param {string} msg  Message of the error
- */
-function formatError(command, name, msg) {
-    return formatAnswer(command, 
-        `<span class="error-msg"><b>${name}</b> ${msg}</span>`);
-}
 
 /**
  * Execute the command sent. Returns

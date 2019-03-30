@@ -47,6 +47,20 @@ function radians(x) {
     return convertAngle(x, 'deg', 'rad');
 }
 
+/**
+ * Convert an array of proportions into expected
+ * population totals
+ * 
+ * @param {number} total      Total in population
+ * @param {array} proportions Array of proportions
+ */
+function propToExpected(total, proportions) {
+    /* @help Convert array of proportions into expected totals */
+    total = math.number(total);
+    if (!Array.isArray(proportions))
+        throw new TypeError('Proportions must be an array');
+    return proportions.map(x => x * total);
+}
 
 module.exports = {
     percentDifference: percentDifference,
@@ -55,5 +69,7 @@ module.exports = {
 
     convertAngle: convertAngle,
     degrees: degrees,
-    radians: radians
+    radians: radians,
+
+    propToExpected: propToExpected
 };

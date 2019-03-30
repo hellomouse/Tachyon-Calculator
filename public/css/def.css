@@ -592,6 +592,7 @@ button:hover {
     padding: 7px 14px;
     margin-top: 5px;
     margin-bottom: -15px;
+    font-size: 22px;
 }
 
 /* D3 graph stuff, free to modify */
@@ -652,4 +653,43 @@ button:hover {
     width: 40px;
     height: 40px;
     margin-bottom: 5px;
+}
+
+.matrix-table {
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+    padding: 0px 10px;
+    font-size: 20px;
+}
+
+#matrix-viewer-matrix-div {
+    max-width: 100%;
+    max-height: 40vh;
+    overflow: auto;
+    padding: 10px;
+}
+
+.matrix-table td {
+    padding: 5px;
+}
+
+.view-matrix-link {
+    border-bottom: 1px solid white;
+}
+.view-matrix-link:hover {
+    cursor: pointer;
+}
+
+/* Output variable types */
+.output-string {
+    color: #b7ffc3;
+}
+.output-function {
+    color: #fffcb7;
+}
+.output-none {
+    color: grey;
+}
+.output-null {
+    color: #ffc7b7;
 }

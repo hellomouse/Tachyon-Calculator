@@ -42,14 +42,6 @@ function wrapAllFunctions(obj) {
 numbers['isPrime'] = numbers.prime.simple;
 delete numbers.prime.simple;
 
-/* Add NCR as alias for binomial */
-numbers['nCr'] = numbers.basic.binomial;
-numbers['ncr'] = numbers.basic.binomial;
-
-/* NPR function */
-numbers['nPr'] = (n, k) => { return numbers.basic.factorial(k) * numbers.basic.binomial(n, k); };
-numbers['npr'] = numbers.nPr;
-
 /* Since numbers.js does type checking and is incompatiable
  * with big number and fraction modes, we'll do a little rounding */
 wrapAllFunctions(numbers);

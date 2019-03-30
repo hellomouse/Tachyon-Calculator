@@ -135,10 +135,11 @@ math.import = wrapMathImport(math.import);
  * (1e-15 is an arbitrary parameter)
  * 
  * @param {*} x Output value
+ * @param {boolean} isFract Was input a fraction?
  */
-function formatTrigOutput(x) {
+function formatTrigOutput(x, isFract=false) {
     if (math.abs(x) < 1e-15) return 0;
-    return x; 
+    return isFract ? math.fraction(x) : x; 
 }
 
 /** 
@@ -160,11 +161,17 @@ function modifyMathTrigToggle(state) {
     fns1.forEach(name => {
         const fn = math[name];
         const fnNumber = x => {
+            let isFract = false;
+            if (x instanceof math.type.Fraction) {
+                x = math.bignumber(x);
+                isFract = true;
+            }
+
             /* Convert input from configured type of angles to radians */
             switch (state.degMode.toLowerCase()) {
-            case 'deg': return formatTrigOutput(fn(math.radians(x)));
-            case 'grad': return formatTrigOutput(fn(math.convertAngle(x, 'grad', 'rad')));
-            default: return formatTrigOutput(fn(x));
+            case 'deg': return formatTrigOutput(fn(math.radians(x)), isFract);
+            case 'grad': return formatTrigOutput(fn(math.convertAngle(x, 'grad', 'rad')), isFract);
+            default: return formatTrigOutput(fn(x), isFract);
             }
         };
 
@@ -180,8 +187,16 @@ function modifyMathTrigToggle(state) {
     fns2.forEach(function (name) {
         const fn = math[name];
         const fnNumber = x => {
+            let isFract = false;
+            if (x instanceof math.type.Fraction) {
+                x = math.bignumber(x);
+                isFract = true;
+            }
+
             /* Convert to radians to configured type of angles*/
-            const result = fn(x);
+            let result = fn(x);
+            result = isFract ? math.fraction(result) : result;
+
             if (!Number.isNaN(result)) {
                 switch (state.degMode.toLowerCase()) {
                 case 'deg': return math.degrees(result);
@@ -202,6 +217,8 @@ function modifyMathTrigToggle(state) {
     math.import(replacements, { override: true });
 }
 
+/* Add alias for permutations and combinations */
+math.import({ nCr: math.combinations, nPr: math.permutations });
 
 module.exports = {
     allFunctions: allFunctions,
