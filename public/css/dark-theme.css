@@ -22,12 +22,10 @@
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background-color: #555; 
-    transition: background-color 0.2s;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background-color: #777; 
-    transition: background-color 0.2s;
 }
 
 /* Body */
@@ -46,10 +44,6 @@ button:focus:not(.in-btn) {
 button:disabled {
     filter: grayscale(1);
     color: grey;
-
-    /* Do not modify */
-    cursor: not-allowed !important;
-    pointer-events: all !important;
 }
 
 /* Generic button stuff, best not to touch */
@@ -63,17 +57,6 @@ button:hover {
     background-color: #0A0A0A;
     color: white;
     font-size: 14px;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    height: 40px;
-    width: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    -webkit-app-region: drag;
-    user-select: none;
-    padding: 0;
 }
 
 /* Dropdown for number type */
@@ -81,14 +64,6 @@ button:hover {
     /* Free to modify these */
     color: #ccc;
     background-color: #333;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    border: 1px solid black;
-    outline: none;
-    padding: 5px 15px;
-    margin: 0 10px;
-    -webkit-app-region: no-drag;
 }
 
 /* Window buttons: min, max, close */
@@ -96,29 +71,16 @@ button:hover {
     /* Free to modify these */
     font-size: 16px;
     color: #ccc;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    border: none;
-    outline: none;
-    width: 50px;
-    height: 40px;
-    background-color: transparent;
-    -webkit-app-region: no-drag;
-    transition: filter 0.2s, background-color 0.2s;
-    filter: brightness(1);
 }
 
 /* On hover for window button */
 .win-btn:hover {
-    transition: filter 0.2s, background-color 0.2s;
     filter: brightness(2);
 }
 
 /* Close X button */
 .close-btn:hover {
     background-color: red;
-    transition: filter 0.2s, background-color 0.2s;
 }
 
 /* Position the div where output
@@ -128,19 +90,6 @@ button:hover {
     background-color: #0A0A0A;
     color: #eee;
     font-size: 24px;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    width: 80%;
-    height: calc(57% - 40px); /* Bottom y value - height of task bar */
-    position: fixed;
-    top: 40px; /* Height of task bar */
-    right: 0;
-
-    padding: 10px 20px;
-    box-sizing: border-box;
-    overflow: auto;
-    transition: height 0.2s;
 }
 
 /* Small text in the answer area 
@@ -158,20 +107,6 @@ button:hover {
     color: white;
     font-family: Roboto;
     font-size: 24px;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    width: 80%;
-    height: 40px;
-    position: fixed;
-    top: 57%; /* same as bottom y value of #output-area */
-    right: 0;
-    
-    border: none;
-    outline: none;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    transition: top 0.2s;
 }
 
 /* Buttons container */
@@ -179,35 +114,9 @@ button:hover {
     /* Free to modify these */
     color: white;
     background-color: #0c0c0c;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    width: 80%;
-    height: calc(100% - 57% - 40px); /* 100% - bottom y value of #output-area - height of #main-input */
-    position: fixed;
-    top: calc(57% + 40px); /* Bottom y value of #output-area + height of #main-input */
-    right: 0;
-    transition: top 0.2s;
 }
 
-/* Button table layout */
-#input-area table {
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    padding: 10px;
-    width: 100%;
-    height: 100%;
-    table-layout: fixed;
-}
 
-/* Button container */
-#input-area table th, #input-area table td {
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    width: 10%;
-    text-align: center;
-    height: 20%;
-}
 
 /* Button for an input like
  * 0 1 2, CE, etc... */
@@ -218,24 +127,8 @@ button:hover {
     color: white;
     font-size: 16px;
     border: none;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    width: 100%;
-    height: 100%;
-    outline: none;
-    filter: brightness(1);
-    transition: filter 0.2s;
-    user-select: none;
 }
 
-/* On button hover brighten it */
-.in-btn:hover {
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    filter: brightness(3);
-    transition: filter 0.2s;
-}
 
 /* Number buttons */
 .num-btn {
@@ -299,12 +192,6 @@ button:hover {
     /* Free to modify these */
     color: #777;
     font-size: 12px;
-    transition: color 0.2s;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    position: relative;
-    top: 5px;
 }
 
 /* Color when the label is active */
@@ -319,19 +206,6 @@ button:hover {
     /* Free to modify */
     color: white;
     background-color: rgba(0, 0, 0, 0.95);
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    position: fixed;
-    bottom: 43%; /* 100 - Bottom y of output-area */
-    height: auto;
-    width: 80%;
-    right: 0;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: visible;
-    white-space: nowrap; 
-    text-overflow: ellipsis;
 }
 
 /* Function help bar */
@@ -339,21 +213,6 @@ button:hover {
     /* Free to modify */
     color: white;
     background-color: black;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    padding: 7px 15px;
-    height: 36.8px;
-    position: fixed;
-    overflow: hidden;
-    left: 20%;
-    box-sizing: border-box;
-
-    bottom: 43%; /* Same as autocomplete-area */
-    width: 80%;
-
-    white-space: nowrap; 
-    text-overflow: ellipsis;
 }
 
 /* Little extra description for function purpose
@@ -369,25 +228,16 @@ button:hover {
     color: #777;
     background-color: transparent;
     font-size: 14px;
-
-    /* Do not modify these properties unless
-     * you know what you're doing */
-    padding: 10px 15px;
-    outline: none;
-    border: none;
-    transition: background-color 0.2s;
 }
 
 #autocomplete-area button:hover {
     background-color: #111;
-    transition: background-color 0.2s;
 }
 
 /* Autocomplete button highlight */
 #autocomplete-area .highlight {
     /* Free to modify */
     background-color: #222;
-    transition: background-color 0.2s;
 }
 
 
@@ -407,19 +257,6 @@ button:hover {
 }
 
 
-/* Black overlay for when modal is active */
-#modal-overlay {
-    /* Do not modify unless you know
-     * what you are doing */
-    background-color: rgba(0, 0, 0, 0.65);
-    position: fixed;
-    left: 0;
-    top: 40px; /* Height of the taskbar */
-    width: 100%;
-    height: 100%;
-    display: none;
-}
-
 /* Modal box (Note: width and height may
  * be altered by javascript code. The width and
  * height below are defaults */
@@ -427,31 +264,9 @@ button:hover {
     /* Free to modify */
     background-color: #111;
     color: white;
-
-    /* Do not modify unless you know
-     * what you are doing */
-    position: fixed;
-    width: 70%;
-    left: 15%;
-    height: 70%;
-    top: 15%;
-    z-index: 99999;
-    display: none;
-    overflow: auto;
-
-    max-height: 70%;
-    animation: fadeIn 0.2s;
 }
 
-@-webkit-keyframes fadeIn {
-    0%    { opacity: 0; }
-    100%  { opacity: 1; }
-}
 
-/* Do not touch */
-.modal-container .active {
-    display: block !important;
-}
 
 /* Error message when an error occurs */
 .error-msg {
@@ -467,25 +282,12 @@ button:hover {
     padding: 8px 12px;
     font-size: 18px;
     transition: background-color 0.2s;
-
-    /* Do not modify unless you know
-     * what you are doing. Changing width
-     * may break modals that depend on it */
-    width: 50%;
-    margin: 5px;
-    outline: none;
 }
 
 .modal-input:focus {
     /* Free to modify */
     background-color: #333;
     transition: background-color 0.2s;
-}
-
-/* Do not modify unless you know
-* what you are doing */
-.modal-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
 }
 
 /* Modal button (submit usually) */
@@ -524,27 +326,13 @@ button:hover {
 .modal-img-btn:hover {
     /* Free to modify */
     background-color: #333;
-    transition: background-color 0.2s;
 }
 
-/* Do not modify, you may break
- * modals */
-.modal-img-btn img {
-    width: 40px;
-    height: 20px;
-}
 
 /* List of functions in a menu */
 .modal-menu-list {
     /* Free to modify */
     background-color: #0c0c0c;
-
-    /* Do not modify unless you know
-     * what you are doing */
-    list-style-type: none;
-    height: calc(70vh - 232px); /* 232 is arbitrary buffer for title, search and button */
-    padding-left: 0;
-    overflow-y: scroll;
 }
 
 .modal-menu-list li {
@@ -552,34 +340,18 @@ button:hover {
     padding: 8px 20px;
     background-color: #0c0c0c;
     transition: background-color 0.2s;
-
-    /* Do not modify unless you know
-     * what you are doing */
-    width: calc(100% - 40px); /* 40 = 2 * padding of ul */
-    user-select: none;
 }
 
 .modal-menu-list li:hover {
     /* Feel free to modify */
     cursor: pointer;
     background-color: #222;
-    transition: background-color 0.2s;
 }
 
 /* Description label for list items */
 .modal-menu-list li .item-desc {
     /* Feel free to modify */
     color: #888;
-
-    /* Do not modify unless you know
-     * what you are doing */
-    max-width: 70%;
-    width: auto;
-    text-align: right;
-    float: right;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 /* Some modals have multiple buttons in a row,
@@ -616,14 +388,6 @@ button:hover {
 .axis line {
     fill: none;
     stroke: #ddd;
-    shape-rendering: crispEdges;
-}
-
-/* Graph for distributions in the 
- * STAT -> DIST modals. Recommended not to modify this */
-#modal-dist-graph {
-    padding: 20px;
-    margin: 10px 0;
 }
 
 /* An image loaded with loadImage */
@@ -636,22 +400,11 @@ button:hover {
 .square-btn-large {
     color: white;
     background-color: #1a1a1a;
-    transition: background-color 0.2s;
-    
-    /* Don't modify unless you know
-     * what you are doing */
-    width: 100px;
-    height: 100px;
-    outline: none;
-    border: none;
-    display: inline-block;
-    margin-right: 10px;
-    user-select: none;
 }
 
 .square-btn-large:hover {
     background-color: #222;
-    transition: background-color 0.2s;
+
 }
 
 .square-btn-large img {
@@ -663,26 +416,11 @@ button:hover {
 .matrix-table {
     border-left: 1px solid grey;
     border-right: 1px solid grey;
-    padding: 0px 10px;
     font-size: 20px;
-}
-
-#matrix-viewer-matrix-div {
-    max-width: 100%;
-    max-height: 40vh;
-    overflow: auto;
-    padding: 10px;
-}
-
-.matrix-table td {
-    padding: 5px;
 }
 
 .view-matrix-link {
     border-bottom: 1px solid white;
-}
-.view-matrix-link:hover {
-    cursor: pointer;
 }
 
 /* Output variable types */
@@ -699,62 +437,24 @@ button:hover {
     color: #ffc7b7;
 }
 
-/* Periodic table */
-.periodic-table-container {
-    display: grid;
-    grid-template-columns: repeat(18, auto);
-    padding: 10px;
-}
-
 .periodic-table-container .element {
     padding: 7.1px 5px;
     text-align: center;
     background-color: #1a1a1a;
     color: #ddd;
-    user-select: none;
-    outline: none;
-    border: none;
-    transition: background-color 0.2s;
 }
 .periodic-table-container .element:hover {
-    cursor: pointer;
     background-color: #222;
-    transition: background-color 0.2s;
 }
 
 /* Tiny badge to display */
 .mini-badge {
-    padding: 3px 8px;
     background-color: transparent;
     color: #555;
-    display: inline;
 }
 
 .scroll-to-bottom-for-output-btn {
     background-color: rgba(0, 0, 0, 0.65);
     color: white;
     user-select: none;
-
-    /* no edit */
-    position: fixed;
-    right: 10px; /* 10px for scrollbar */
-    width: 50px;
-    height: 30px;
-    outline: none;
-    border: none;
-    bottom: 43%; /* 100 - Bottom of output-area */
-}
-
-.output-item {
-    user-select: all;
-}
-
-.btn-pulse {
-    animation: pulse 1s infinite;
-}
-
-@-webkit-keyframes pulse {
-    0%    { filter: brightness(1); }
-    50%   { filter: brightness(4.5); }
-    100%  { filter: brightness(1); }
 }

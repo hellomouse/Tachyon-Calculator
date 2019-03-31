@@ -35,10 +35,10 @@ modal.show = id => {
     show.call(modal);
     document.getElementById('element-selector-title').innerHTML = xssFilters.inHTMLData(`(${element.symbol}) ${element.name}`);
     document.getElementById('element-selector-list').innerHTML = 
-        elemKeys.filter(x => element[x]).map((x, i) => `<li onclick="addChar('${toAdd(x, i)}'); require('./src/state').modal.hide();">
+        elemKeys.map((x, i) => element[x] ? `<li onclick="addChar('${toAdd(x, i)}'); require('./src/state').modal.hide();">
         ${x.split('_').map(x => x[0].toUpperCase() + x.substring(1)).join(' ')} 
             <span class="item-desc">${toAdd(x, i)}
-            </span></li>`).join('\n'); // xssFilters.inHTMLData(
+            </span></li>` : '').join('\n'); // xssFilters.inHTMLData(
 };
 
 

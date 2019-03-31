@@ -9,5 +9,6 @@ module.exports = {
     numericConst: require('./numeric-constants.js'),
     customConstants: require('./custom-constants.js'),
     element: require('./element.js'),
-    solarSystem: require('./solar-system.js')
+    solarSystem: require('./solar-system.js'),
+    planet: require('./planet.js')
 };

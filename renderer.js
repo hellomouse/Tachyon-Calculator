@@ -29,30 +29,15 @@ function sendData() {
     addData(`<small>${mainInput.value}
     ${state.displayDegTypeInHistory ? `<div class="mini-badge" style="float: right">${state.degMode.toUpperCase()}</div></small>` : ''}`);
 
-    let randId = 'output-temp-' + Math.random();
-    addData(`<span id="${randId}"></span>`, false, false);
-
     /* Reset the autocomplete */
     hideAutocompleteArea();
     autocomplete.current.suggestions = [];
 
-    /* Calculate the function 
-    TODO CHILDPROCESS FORK?*/
-    setTimeout(() => {
-        document.getElementById(randId).outerHTML = ''; // Delete the temp loading message
+    addData(commandExec(mainInput.value));
+    mainInput.value = '';
 
-        addData(commandExec(mainInput.value));
-        mainInput.value = '';
-
-        /* Reset history index */
-        state.historyIndex = state.history.length; // Not -1 as history's length will increment when pressed
-    });
-
-    /* If function is taking too long display a calculating message */
-    setTimeout(() => {
-        let temp = document.getElementById(randId);
-        if (temp) temp.innerHTML = 'Calculating output...';
-    }, state.minTimeToBeASlowFunc);
+    /* Reset history index */
+    state.historyIndex = state.history.length; // Not -1 as history's length will increment when pressed
 }
 
 /**

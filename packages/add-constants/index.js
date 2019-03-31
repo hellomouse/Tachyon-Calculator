@@ -13,7 +13,7 @@ math.import({
 
     // Aliases
     G: math.gravitationConstant,
-    c: math.speedOfLight,
+    // c: math.speedOfLight, // Breaks derivative()
 
     // Numeric constants
     silverRatio: 1 + math.sqrt(2)

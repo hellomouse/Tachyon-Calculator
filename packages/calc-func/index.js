@@ -2,6 +2,7 @@
 
 module.exports = {
     stat: require('./src/stat'),
+    calculus: require('./src/calculus'),
     physics: require('./src/physics'),
     basic: require('./src/basic'),
     display: require('./src/display'),

@@ -16,7 +16,7 @@ require('other-fix');   // Patching for numbers.js and other modules
 
 math.import(require('numbers'), { wrap: true, silent: true });
 math.import(require('numeric'), { wrap: true, silent: true });
-math.import(require('calc-func'), { wrap: false, silent: true, override: true });
+math.import(require('calc-func'), { wrap: true, silent: true, override: true });
 
 require('add-units');  // Adds more units  */
 require('add-constants'); // Add more constants
@@ -38,7 +38,6 @@ module.exports = function(command) {
     if (state.history.length > state.maxHistoryItems)
         state.history = state.history.slice(state.history.length - state.maxHistoryItems);
     try {
-        configMathNumber('BigNumber');
         let ans = math.format(math.eval(command.replace(
             /* Replaces Ans with the value, don't use the scope argument 
              * as it doesn't properly handle units and other non-number types */
