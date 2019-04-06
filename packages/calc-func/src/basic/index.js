@@ -3,7 +3,8 @@
 'use strict';
 
 const math = require('mathjs');
-const angleTotals = require('../../../../src/state.js').degTypes;
+const state = require('../../../../src/state.js');
+const angleTotals = state.degTypes;
 
 const percentDifference = math.typed('percentDifference', {
     'number, number': function(experimental, trueVal) {
@@ -48,6 +49,14 @@ function radians(x) {
 }
 
 /**
+ * Converts radians to current degMode
+ * @param {number} rad Radians
+ */
+function convertToCurrentDegType(rad) {
+    return convertAngle(rad, 'rad', state.degMode);
+}
+
+/**
  * Convert an array of proportions into expected
  * population totals
  * 
@@ -71,5 +80,15 @@ module.exports = {
     degrees: degrees,
     radians: radians,
 
-    propToExpected: propToExpected
+    propToExpected: propToExpected,
+
+    /* Conversions */
+    rectToPolar: function(x, y) {
+        /* @help Convert (x, y) to polar (r, theta) */
+        return [math.sqrt(x * x + y * y), convertToCurrentDegType(math.atan2(y, x))];
+    },
+    polarToRect: function(r, theta) {
+        /* @help Convert (r, theta) to rect (x, y) */
+        return [r * math.cos(theta), r * math.sin(theta)];
+    }
 };

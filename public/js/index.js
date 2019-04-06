@@ -1,7 +1,7 @@
 /* Main calculator JS utilities 
  * This file is loaded directly, not required */
 
-/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal configMathNumber cycleAngleMode*/
+/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal configMathNumber cycleAngleMode toggleSideMenu */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "[d3|winFunc]" }] */
 
 'use strict';
@@ -205,4 +205,12 @@ function cycleAngleMode() {
     document.getElementById('angle-btn').innerHTML = state.degMode.toUpperCase();
     document.getElementById('degModeLabel').innerHTML = state.degMode === 'deg' ?
         state.degMode.toUpperCase() + 'REES' : state.degMode.toUpperCase() + 'IANS';
+}
+
+/**
+ * Toggles the side menu
+ */
+function toggleSideMenu() {
+    let nav = document.getElementById('side-nav');
+    nav.style.left = !nav.style.left || nav.style.left === '-200px' ? '50px' : '-200px';
 }

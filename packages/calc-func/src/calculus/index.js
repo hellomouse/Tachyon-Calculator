@@ -183,6 +183,16 @@ function summation(expression, start, end, inc=1) {
     return sum;
 }
 
+function funcCrossProduct(v1, v2) {
+    // https://mathjs.org/docs/datatypes/matrices.html
+    // subset
+    
+}
+
+function curl(g, F) {
+    /* Gradient(g) x F */
+}
+
 
 // integral sum alias
 // indefinite integral
@@ -190,6 +200,9 @@ function summation(expression, start, end, inc=1) {
 // reieman sums
 // largrange error bound
 // min/max of function (override with array)
+// curl and divergence
+// runge kutta
+// eulers method
 
 module.exports = {
     derivative: derivative,

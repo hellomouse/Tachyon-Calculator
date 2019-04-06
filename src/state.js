@@ -2,7 +2,7 @@
 
 let state = {
     modal: null,  // Current modal object
-    page: 'main', // Current page name
+    page: null, // Current page object
 
     latexPrint: false,
     dispMode: 'normal', // normal, sci, frac

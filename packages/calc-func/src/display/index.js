@@ -78,5 +78,4 @@ module.exports = {
         /* @help Humanize a number of seconds */
         return humanizeDuration(math.number(seconds) * 1000);
     },
-
 };

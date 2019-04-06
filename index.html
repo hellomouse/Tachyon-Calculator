@@ -12,7 +12,7 @@
         <script src="./public/js/index.js"></script>
 
         <div id="task-bar" class="task-bar">
-            <img width="20px" height="20px" src="./public/img/icon-100.png" style="float: left; margin: 10px">
+            
 
             <div style="margin: 13px; margin-left: calc(20% - 20px); float: left">
                 <div style="display: inline-block; width: 70px" id="degModeLabel">RAD</div>
@@ -62,7 +62,8 @@
                 <table>
                     <tr>
                         <td><button class="in-btn second-btn" id="2nd-btn" onclick="toggle2nd()">2nd</button></td>
-                        <td><button class="in-btn mem-btn has-second-btn">
+                        <td><button class="in-btn mem-btn has-second-btn"
+                            onclick="openModal('modal.list', 'modal.matrix')">
                             <sup class="second-label">Matrix</sup><br>
                             List
                         </button></td>
@@ -151,7 +152,7 @@
                         <td><button class="in-btn" onclick="addChar('-')">-</button></td>
                     </tr>
                     <tr>
-                        <td><button class="in-btn has-second-btn">
+                        <td><button class="in-btn has-second-btn" onclick="openModal('modal.stat.menu', 'modal.angle')">
                             <sup class="second-label">Angle</sup><br>
                             Stat
                         </button></td>
@@ -185,6 +186,29 @@
         <div class="modal-container">
             <div id="modal-overlay"></div>
             <div id="modal">hi</div>
+        </div>
+
+        <div style="display: none" id="page-overlay"></div>
+
+        <!-- Thin side nav for general options -->
+        <div id="side-nav-bar">
+            <div class="header">
+                <button class="hamburger-button" onclick="toggleSideMenu()">☰</button>
+
+                <!--<img width="20px" height="20px" src="./public/img/icon-100.png"
+                    style="float: right; margin-right: 20px; margin-top: 15px">-->
+            </div>
+            <ul id="side-nav-bar-menu" class="output-menu">
+                <li class="active" onclick="require('./src/state.js').page.hide(this)"><img src="public/img/side-nav/sci.png"></li>
+                <li onclick="require('./src/gui').page.graph2d.show(this)"><img src="public/img/side-nav/graph.png"></li>
+            </ul>
+        </div>
+
+        <!-- List of calculator types -->
+        <div id="side-nav">
+            <br>
+            <h3>Calculator</h3>
+            <ul id="calculator-list-menu" class="output-menu"></ul>
         </div>
 
         <script>

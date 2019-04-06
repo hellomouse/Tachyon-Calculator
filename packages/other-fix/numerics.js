@@ -11,6 +11,8 @@ for (let key of Object.keys(numeric)) {
         key.endsWith('seq') || // Sequence functions
         key.endsWith('seqV') ||
         key.endsWith('V') ||
-        key.endsWith('VS'))   
+        key.endsWith('VS') ||
+        key.endsWith('eqS') ||
+        key.endsWith('MM'))   
         delete numeric[key];
 }

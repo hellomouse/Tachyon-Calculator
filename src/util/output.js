@@ -72,6 +72,7 @@ function formatAnswer(command, answer) {
                     /* Display the matrix directly */
                     return gui.modal.misc.matrix.formatMatrix(answer);
                 }
+                return answer.join(', ');
             } catch(e) { /* Not a matrix actually */ }
         }
 

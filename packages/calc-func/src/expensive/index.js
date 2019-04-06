@@ -273,6 +273,39 @@ const geoSumMod = math.typed('geoSumMod', {
     }
 });
 
+/**
+ * Generate factors of a number
+ * @param {number} n Number
+ */
+function factors(n) {
+    /* @help Return factors of a number */
+    n = math.number(n);
+
+    if (n > Number.MAX_SAFE_INTEGER)
+        throw new Error(`Number is above max value of ${Number.MAX_SAFE_INTEGER} (Use primeFactors instead?)`);
+    if (n < 1 || Math.floor(n) !== n)
+        throw new Error('Number must be an integer >= 1');
+
+    let f1 = [];
+    let f2 = [];
+    let end = Math.floor(Math.sqrt(n));
+    let startTime = new Date();
+
+    for (let i = 1; i <= end; i++) {
+        if (new Date() - startTime > state.maxFuncRunTime) {
+            f2.reverse();
+            throw new Error(`Function timed out, returning current factors<br>${f1.concat(f2)}`);
+        }
+
+        if (n % i === 0) {
+            f1.push(i);
+            if (i * i !== n) f2.push(n / i);  /* Don't include a square root twice */
+        }
+    }
+    f2.reverse();
+    return f1.concat(f2);
+}
+
 module.exports = {
     powMod: powMod,
     powerMod: powMod,
@@ -287,5 +320,6 @@ module.exports = {
     divisorSum: divisorSum,
     factorSum: divisorSum,
 
-    geoSumMod: geoSumMod
+    geoSumMod: geoSumMod,
+    factors: factors
 };

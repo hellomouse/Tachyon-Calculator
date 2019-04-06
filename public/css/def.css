@@ -36,6 +36,12 @@ body {
     font-family: Roboto, sans-serif !important;
 }
 
+textarea {
+    background-color: #111;
+    border: 1px solid #333;
+    color: #eee;
+}
+
 /* Generic button modifiers, free to modify
  * Calculator buttons should not be highlighted
  * when focused as that keeps them highlighted
@@ -67,9 +73,9 @@ button:hover {
     /* Do not modify these properties unless
      * you know what you're doing */
     height: 40px;
-    width: 100%;
+    width: calc(100% - 40px);
     position: fixed;
-    left: 0;
+    left: 40px; /* Width of side nav */
     top: 0;
     -webkit-app-region: drag;
     user-select: none;
@@ -131,7 +137,7 @@ button:hover {
 
     /* Do not modify these properties unless
      * you know what you're doing */
-    width: 80%;
+    width: calc(100% - 50px);
     height: calc(57% - 40px); /* Bottom y value - height of task bar */
     position: fixed;
     top: 40px; /* Height of task bar */
@@ -161,7 +167,7 @@ button:hover {
 
     /* Do not modify these properties unless
      * you know what you're doing */
-    width: 80%;
+    width: calc(100% - 50px); /* - width of side nav */
     height: 40px;
     position: fixed;
     top: 57%; /* same as bottom y value of #output-area */
@@ -182,7 +188,7 @@ button:hover {
 
     /* Do not modify these properties unless
      * you know what you're doing */
-    width: 80%;
+    width: calc(100% - 50px); /* - width of side nav */
     height: calc(100% - 57% - 40px); /* 100% - bottom y value of #output-area - height of #main-input */
     position: fixed;
     top: calc(57% + 40px); /* Bottom y value of #output-area + height of #main-input */
@@ -325,7 +331,7 @@ button:hover {
     position: fixed;
     bottom: 43%; /* 100 - Bottom y of output-area */
     height: auto;
-    width: 80%;
+    width: calc(100% - 50px); /* - width of side nav */
     right: 0;
     box-sizing: border-box;
     overflow-x: hidden;
@@ -346,11 +352,11 @@ button:hover {
     height: 36.8px;
     position: fixed;
     overflow: hidden;
-    left: 20%;
+    left: 50px; /* Width of side nav */
     box-sizing: border-box;
 
     bottom: 43%; /* Same as autocomplete-area */
-    width: 80%;
+    ;width: calc(100% - 50px); /* - width of side nav */
 
     white-space: nowrap; 
     text-overflow: ellipsis;
@@ -435,7 +441,7 @@ button:hover {
     left: 15%;
     height: 70%;
     top: 15%;
-    z-index: 99999;
+    z-index: 999;
     display: none;
     overflow: auto;
 
@@ -706,8 +712,8 @@ button:hover {
     padding: 10px;
 }
 
-.periodic-table-container .element {
-    padding: 7.1px 5px;
+.periodic-table-container .element,
+.periodic-table-container .element-large {
     text-align: center;
     background-color: #1a1a1a;
     color: #ddd;
@@ -716,10 +722,18 @@ button:hover {
     border: none;
     transition: background-color 0.2s;
 }
-.periodic-table-container .element:hover {
+.periodic-table-container .element:hover,
+.periodic-table-container .element-large:hover {
     cursor: pointer;
     background-color: #222;
     transition: background-color 0.2s;
+}
+
+.periodic-table-container .element {
+    padding: 7.1px 5px;
+}
+.periodic-table-container .element-large {
+    padding: 7px 5px;
 }
 
 /* Tiny badge to display */
@@ -757,4 +771,135 @@ button:hover {
     0%    { filter: brightness(1); }
     50%   { filter: brightness(4.5); }
     100%  { filter: brightness(1); }
+}
+
+#page-overlay {
+    /* Customizable */
+    background-color: #0a0a0a;
+    color: #eee;
+
+    width: calc(100% - 50px); /* - width of side nav */
+    height: calc(100% - 40px); /* 100% - title bar height */
+    position: fixed;
+    left: 50px; /* Side nav */
+    top: 40px; /* Title bar height */
+    z-index: 99;
+    border: none;
+    outline: none;
+    overflow: auto;
+}
+
+.desmos-graph {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    filter: invert(1) hue-rotate(180deg); /* Dark theme */
+}
+
+#side-nav {
+    position: fixed;
+    top: 0; 
+    left: -200px; /* -width + side-nav-bar width */
+    width: 250px;
+    height: 100%;
+
+    z-index: 9998;
+    transition: left 0.2s;
+    overflow: hidden;
+    background-color: #0a0a0a;
+}
+
+#side-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0px;
+    width: 50px;
+    height: 100%;
+
+    z-index: 9999;
+    transition: width 0.2s;
+    overflow: hidden;
+    background-color: #111;
+    border-right: 1px solid #0a0a0a;
+}
+
+#side-nav-bar .header {
+    padding-bottom: 15px;
+    background-color: #0a0a0a;
+    color: white;
+}
+
+.hamburger-button {
+    color: white;
+    background-color: transparent;
+    
+    -webkit-app-region: no-drag;
+    border: none;
+    outline: none;
+    margin-left: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+#side-nav-bar .output-menu,
+#side-nav .output-menu {
+    list-style-type: none;
+    padding-left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    margin: 0;
+}
+
+#side-nav-bar .output-menu img,
+#side-nav .output-menu img  {
+    width: 20px;
+    height: 20px;
+    margin-left: -5px;
+    margin-right: 20px;
+    position: relative;
+    top: 2px;
+}
+
+#side-nav-bar .output-menu li,
+#side-nav .output-menu li {
+    padding: 10px 20px 10px 20px;
+    color: #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+#side-nav-bar .output-menu li:hover,
+#side-nav .output-menu li:hover {
+    background-color: #171717;
+    cursor: pointer;
+}
+
+#side-nav-bar .output-menu .active {
+    background-color: #444;
+}
+
+#side-nav h3 {
+    color: white;
+    margin: 10px 20px;
+    font-weight: normal;
+}
+
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 0.5fr));
+    grid-gap: 1rem;
+}
+
+.card {
+    background-color: #222;
+    padding: 15px;
+    overflow: auto;
+}
+
+.active-btn {
+    filter: brightness(3);
+    transition: filter 0.2s;
 }
