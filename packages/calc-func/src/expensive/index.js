@@ -8,10 +8,7 @@ const state = require('../../../../src/state.js');
 const primes = require('../util/primes.js');
 
 /* Let renderer load first */
-let renderer;
-setTimeout(() => {
-    renderer = require('../../../../renderer.js');
-});
+const renderer = require('../../../../renderer.js');
 
 const powMod = math.typed('powMod', {
     'number, number, number': function (base, exponent, modulus) {

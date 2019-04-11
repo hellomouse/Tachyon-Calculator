@@ -6,10 +6,7 @@ const distriprob = require('distriprob');
 const math = require('mathjs');
 
 /* Let renderer load first */
-let renderer;
-setTimeout(() => {
-    renderer = require('../../../../renderer.js');
-});
+const renderer = require('../../../../renderer.js');
 
 /**
  * Returns the symbol for the direction parameter

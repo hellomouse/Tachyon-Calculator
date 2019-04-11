@@ -1,27 +1,34 @@
-var Mocha = require('mocha');
+'use strict';
 
-var mocha = new Mocha({});
+const Mocha = require('mocha');
+const mocha = new Mocha({});
+
+const renderer = require('../renderer.js');
 
 // TODO iterate all js files
 
 mocha.addFile('./test/calc-func/test-calc.js');
 
+let successes = [];
+let fails = [];
+
 mocha.run()
-    .on('test', function(test) {
-        console.log('Test started: '+test.title);
+    /* .on('test', function (test) {
+        //renderer.test.start(test.parent.title);
     })
-    .on('test end', function(test) {
-        //console.log('Test done: '+test.title);
+    .on('test end', function (test) {
+        // renderer.test.end(test.title);
+    }) */
+    .on('pass', function (test) {
+        successes.push(test);
     })
-    .on('pass', function(test) {
-        console.log('Test passed');
-        console.log(test);
+    .on('fail', function (test, err) {
+        fails.push([test, err]);
     })
-    .on('fail', function(test, err) {
-        console.log('Test fail');
-        console.log(test);
-        console.log(err);
-    })
-    .on('end', function() {
-        //console.log('All done');
+    .on('end', function () {
+        const total = successes.length + fails.length;
+        renderer.addData('Test Results<br>');
+        renderer.test.addAllPasses(successes, total);
+        renderer.test.addAllFails(fails, total);
+        renderer.test.summary(successes, fails, total);
     });

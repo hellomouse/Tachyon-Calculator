@@ -11,6 +11,7 @@ const state = require('../../../../src/state.js');
 
 const INTEGRAL_ERROR = 1e-8;
 const DERIVATIVE_H = 1e-15;
+const SMALL_NUMBER = math.bignumber('1e-15');
 
 const compileFuncFromString = func => {
     let temp = math.parse(func).compile();
@@ -26,11 +27,7 @@ const compileFuncFromString = func => {
 };
 
 /* Let renderer load first */
-let renderer;
-setTimeout(() => {
-    renderer = require('../../../../renderer.js');
-});
-
+const renderer = require('../../../../renderer.js');
 const derivativeSymbolic = math.derivative;
 
 /**
@@ -63,18 +60,25 @@ function derivative(expression, variable='x', point=null, level=1) {
         try {
             expression = derivativeSymbolic(expression, variable);
         } catch(e) {
-            if (e.message.includes('is not supported by derivative') && level === 1 && ctx !== {}) {
-                /* Function can be approximated by a limit */
-                let initialX = math.number(ctx[variable]);
-
-                ctx[variable] = initialX - DERIVATIVE_H;
-                let f1 = math.number(math.eval(expression.toString(), ctx));
-                ctx[variable] = initialX + DERIVATIVE_H;
-                let f2 = math.number(math.eval(expression.toString(), ctx));
-
-                return (f1 + f2) / (2 * DERIVATIVE_H);
-            }
+            /* Expression should be a string since no derivative
+             * was evaluated yet, so break the loop */
+            break;
         }
+    }
+
+    if (typeof expression === 'string') {
+        if (level === 1 && Object.keys(ctx).length > 0) {
+            /* Function can be approximated by a limit */
+            let initialX = math.number(ctx[variable]);
+
+            ctx[variable] = initialX - DERIVATIVE_H;
+            let f1 = math.number(math.eval(expression.toString(), ctx));
+            ctx[variable] = initialX + DERIVATIVE_H;
+            let f2 = math.number(math.eval(expression.toString(), ctx));
+
+            return (f2 - f1) / (2 * DERIVATIVE_H);
+        }
+        throw new Error('Function ' + expression + '  is not supported by derivative, or a wrong number of arguments is passed');
     }
     if (point === null || point === undefined) return expression;
 
@@ -110,10 +114,13 @@ function gradient(expression, point=null, variables=['x','y','z']) {
  */
 function limit(expression, point, dir='middle') {
     /* @help Approximate the limit at a point, dir can be 'left', 'middle' or 'right' */
-    try { 
-        const SMALL_NUMBER = math.bignumber('1e-15');
-        point = math.bignumber(point);
+    if (!expression)
+        throw new Error('Function must be supplied');
+    if (!['left', 'middle', 'right'].includes(dir))
+        throw new Error('Dir must be \'left\', \'middle\' or \'right\'');
 
+    try { 
+        point = math.bignumber(point);
         if (dir === 'middle' || dir === 'mid') {
             let s1 = math.eval(expression.toString(), { x: point.sub(SMALL_NUMBER) });
             let s2 = math.eval(expression.toString(), { x: point.add(SMALL_NUMBER) });

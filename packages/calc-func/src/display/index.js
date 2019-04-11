@@ -6,10 +6,7 @@ const humanizeDuration = require('humanize-duration');
 const MAX_DENOM_TO_TEST = 10000;
 
 /* Let renderer load first */
-let renderer;
-setTimeout(() => {
-    renderer = require('../../../../renderer.js');
-});
+const renderer = require('../../../../renderer.js');
 
 /**
  * Get the best numerator and denominator for a 

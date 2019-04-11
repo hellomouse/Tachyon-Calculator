@@ -7,7 +7,7 @@ const calculus = require('../../packages/calc-func').calculus;
 const expect = require('chai').expect;
 
 describe('derivative()', function () {
-    context('No arguments supplied', function () {
+    context('Derivative with no arguments supplied', function () {
         it('Should throw an error', function () {
             expect(() => calculus.derivative()).to.throw();
         });
@@ -50,6 +50,77 @@ describe('derivative()', function () {
     context('Derivative with implict multiplication of variables with respect to x at x = 2 and y= 3', function () {
         it('Should return 3', function () {
             expect(calculus.derivative('xy', 'x', { x: 2, y: 3 }).toString()).to.equal('3');
+        });
+    });
+    context('Derivative that has no symbolic form (x!)', function () {
+        it('Should throw an error', function () {
+            expect(() => calculus.derivative('x!')).to.throws();
+        });
+    });
+    context('Derivative that has no symbolic form (normalcdf)', function () {
+        it('Should throw an error', function () {
+            expect(() => calculus.derivative('normalcdf(0, x, 1, -1)')).to.throws();
+        });
+    });
+    context('Definite derivative that has no symbolic form (normalpdf) at x = 1', function () {
+        it('Should return a value around -0.2498001805406602', function () {
+            expect(+calculus.derivative('normalpdf(x,0,1)', 'x', 1)).closeTo(-0.2498001805406602, 0.001);
+        });
+    });
+});
+
+describe('gradient()', function () {
+    context('Gradient with no arguments supplied', function () {
+        it('Should throw an error', function () {
+            expect(() => calculus.gradient()).to.throw();
+        });
+    });
+    context('Gradient of x * y', function () {
+        it('Should return [y, x, 0]', function () {
+            expect(calculus.gradient('x * y').toString()).to.equal('y,x,0');
+        });
+    });
+});
+
+describe('limit()', function () {
+    context('Limit with no arguments supplied', function () {
+        it('Should throw an error', function () {
+            expect(() => calculus.limit()).to.throw();
+        });
+    });
+    context('Limit of x^2 as x -> 3', function () {
+        it('Should return around 9', function () {
+            expect(+calculus.limit('x^2', 3).toString()).closeTo(9, 0.001);
+        });
+    });
+    context('Limit of 1/x as x -> 0-', function () {
+        it('Should return around a large negative number (< -1e10)', function () {
+            expect(+calculus.limit('1/x', 0, 'left').toString()).at.most(-1e10);
+        });
+    });
+    context('Limit of 1/x as x -> 0+', function () {
+        it('Should return around a large number (> 1e10)', function () {
+            expect(+calculus.limit('1/x', 0, 'right').toString()).at.least(1e10);
+        });
+    });
+    context('Limit of 1/x as x -> 0', function () {
+        it('Should throw an Error', function () {
+            expect(() => calculus.limit('1/x', 0)).to.throw();
+        });
+    });
+    context('Limit of sin(x)/x as x -> 0', function () {
+        it('Should be approximately 1', function () {
+            expect(+calculus.limit('sin(x) / x', 0).toString()).closeTo(1, 0.001);
+        });
+    });
+    context('Limit with invalid direction', function () {
+        it('Should throw an error', function () {
+            expect(() => calculus.limit('x', 0, 'test')).to.throw();
+        });
+    });
+    context('Limit with expression not in x', function () {
+        it('Should throw an error', function () {
+            expect(() => calculus.limit('y', 0)).to.throw();
         });
     });
 });

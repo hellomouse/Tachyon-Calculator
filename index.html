@@ -177,7 +177,7 @@
                         <td><button class="in-btn" onclick="addChar('-')">±</button></td>
                         <td><button class="in-btn num-btn" onclick="addChar('0')">0</button></td>
                         <td><button class="in-btn" onclick="addChar('.')">.</button></td>
-                        <td><button class="in-btn" id="equals-btn" onclick="require('./renderer.js').sendData()">=</button></td>
+                        <td><button class="in-btn" id="equals-btn" onclick="require('./input-handler.js').sendData()">=</button></td>
                     </tr>
                 </table>
             </div>
@@ -217,7 +217,7 @@
              * require in the background */
             setTimeout(() => {
                 cycleAngleMode(); // Initial setting for angle mode
-                require('./renderer.js');
+                require('./input-handler.js');
             });
         </script>
     </body>
