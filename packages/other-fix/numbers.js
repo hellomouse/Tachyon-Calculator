@@ -16,7 +16,13 @@ const mathjsFix = require('mathjs-fix').allFunctions;
  */
 function wrapNumType(fn) {
     return function() {
-        let args = Array.from(arguments).map(x => math.number(x));
+        let args = Array.from(arguments).map(x => {
+            if (typeof x === 'function') return x;
+            if (Array.isArray(x)) return x;
+            if (math.type.isMatrix(x)) return x.toArray();
+            if (x === undefined || x === null) return x;
+            return math.number(x);
+        });
         return fn.apply(this, args);
     };
 }

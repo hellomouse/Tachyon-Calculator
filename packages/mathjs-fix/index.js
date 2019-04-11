@@ -36,7 +36,6 @@ math.import({ coulomb: math.createUnit('coulomb', { definition: '1 C' }, { overr
 delete math.coulomb;
 delete math.faradayConstant;
 
-
 /* Hack to add a reference to the original function
  * when adding a typed function to mathjs */
 let allFunctions = {}; // Dir of original function reference

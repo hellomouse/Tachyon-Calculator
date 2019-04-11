@@ -4,7 +4,8 @@
   "description": "A calculator yay",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "mocha test/**/*.js"
   },
   "repository": "https://github.com/hellomouse/tachyon-calculator",
   "keywords": [
@@ -13,20 +14,26 @@
   "author": "Bowserinator <bowserinator@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^4.0.7"
+    "chai": "^4.2.0",
+    "check-error": "^1.0.2",
+    "electron": "^4.0.7",
+    "mocha": "^6.1.2"
   },
   "dependencies": {
+    "algebrite": "^1.2.1",
     "app-module-path": "^2.2.0",
     "cache-require-paths": "^0.3.0",
     "d3": "^5.9.2",
     "distriprob": "^0.2.0",
     "get-function-arguments": "^1.0.0",
     "humanize-duration": "^3.18.0",
+    "integrate-adaptive-simpson": "^1.1.1",
     "mathjs": "^5.6.0",
+    "modified-newton-raphson": "^1.0.2",
     "mousetrap": "^1.6.3",
+    "nerdamer": "^0.8.4",
     "number-name": "^0.1.5",
     "numbers": "^0.7.0",
-    "numeric": "^1.2.6",
     "xss-filters": "^1.2.7"
   }
 }

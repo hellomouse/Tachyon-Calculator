@@ -13,9 +13,10 @@ const formatError = util.output.formatError;
 const mathFix = require('mathjs-fix'); // Custom modifications to mathjs
 require('other-fix');   // Patching for numbers.js and other modules
 const math = require('mathjs');
+const Algebrite = require('algebrite');
 
 math.import(require('numbers'), { wrap: true, silent: true });
-math.import(require('numeric'), { wrap: true, silent: true });
+// math.import(require('numeric'), { wrap: true, silent: true }); // Currently unused
 math.import(require('calc-func'), { wrap: false, silent: true, override: true });
 
 require('add-units');  // Adds more units  */
@@ -48,6 +49,9 @@ module.exports = function(command) {
         state.ans = ans;
         return '<span class="output-item">' + formatAnswer(command, ans) + '</span>';
     } catch(e) {
+        if (e.message.includes('Undefined symbol'))
+            return '<span class="output-item">' + formatAnswer(command, Algebrite.simplify(command).toString()) + '</span>';
+
         return formatError(command, e.name, e.message);
     }
 };

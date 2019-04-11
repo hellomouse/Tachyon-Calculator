@@ -31,7 +31,9 @@ module.exports = {
         const: require('./modal/const'),
         misc: require('./modal/misc'),
         angle: require('./modal/angle.js'),
-        list: require('./modal/list')
+        list: require('./modal/list'),
+        math: require('./modal/math.js'),
+        rand: require('./modal/rand.js')
     },
     page: pages,
     addPagesToList: addPagesToList

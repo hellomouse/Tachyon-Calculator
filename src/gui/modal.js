@@ -19,6 +19,7 @@ class Modal {
     constructor(html, size=[null, null]) {
         this.html = html;
         this.size = size;
+        this.tabs = 0;
     }
 
     /**
@@ -81,6 +82,20 @@ class Modal {
     /** Alias for hide */
     close() { 
         this.hide(); 
+    }
+
+    /**
+     * Sets the current active tab
+     * @param {number} index
+     */
+    setActiveTab(index) {
+        for (let i = 0; i < this.tabs; i++) {
+            let x = 1 + i;
+            document.getElementById('modal-btn-' + x).classList.remove('active-btn');
+            document.getElementById('modal-page-' + x).style.display = 'none';
+        }
+        document.getElementById('modal-btn-' + index).classList.add('active-btn');
+        document.getElementById('modal-page-' + index).style.display = 'block';
     }
 }
 

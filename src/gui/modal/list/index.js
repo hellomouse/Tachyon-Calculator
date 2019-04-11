@@ -7,7 +7,7 @@ const Modal = require('../../modal.js');
 const functionsOps = [
     'concat', 'sort', 'dim',
     'filter', 'map', 'mapreduce', 'range',
-    'fill', 'cumsum', 'deltalist'
+    'fill', 'cumSum', 'deltaList'
 ];
 const funcOpsHelp = {
     concat: 'Concatenate lists. By default, the matrices are concatenated by the',
@@ -18,8 +18,8 @@ const funcOpsHelp = {
     mapreduce: 'Map and reduce items in a list',
     range: 'Get a list of numbers in a range',
     fill: 'Fill a list with numbers',
-    cumsum: 'Cumulative sum list of a list',
-    deltalist: 'Difference between consecutive elements of a list'
+    cumSum: 'Cumulative sum list of a list',
+    deltaList: 'Difference between consecutive elements of a list'
 };
 const functionsMath = [
     'min', 'max', 'mean', 'median', 'mode', 'sum', 'product',
@@ -55,28 +55,23 @@ let htmlList2 = keys2.map((x, i) => {
 const modal = new Modal(`
 <div style="margin: 30px">
     <h2>List</h2>
-    <button class="modal-btn active-btn" style="width: 150px" 
-    id="modal-btn-1"
-    onclick="
-        document.getElementById('modal-list-1').style.display = 'block';
-        document.getElementById('modal-list-2').style.display = 'none';
-        document.getElementById('modal-btn-1').classList.add('active-btn');
-        document.getElementById('modal-btn-2').classList.remove('active-btn');
-    ">Ops</button>
-    <button class="modal-btn" style="width: 150px"
-    id="modal-btn-2" 
-     onclick="
-        document.getElementById('modal-list-2').style.display = 'block';
-        document.getElementById('modal-list-1').style.display = 'none';
-        document.getElementById('modal-btn-2').classList.add('active-btn');
-        document.getElementById('modal-btn-1').classList.remove('active-btn');
-    "">Math</button>
 
-    <ul class="modal-menu-list" style="display: block" id="modal-list-1">
+    <button class="modal-btn active-btn" style="width: 150px" id="modal-btn-1"
+    onclick="require('./src/state.js').modal.setActiveTab(1);">Edit</button>
+    <button class="modal-btn" style="width: 150px" id="modal-btn-2"
+    onclick="require('./src/state.js').modal.setActiveTab(2);">Ops</button>
+    <button class="modal-btn" style="width: 150px"
+    id="modal-btn-3" onclick="require('./src/state.js').modal.setActiveTab(3);">Math</button>
+
+    <ul class="modal-menu-list" style="display: block" id="modal-page-1">
         ${htmlList1}
     </ul>
 
-    <ul class="modal-menu-list" style="display: none" id="modal-list-2">
+    <ul class="modal-menu-list" style="display: none" id="modal-page-2">
+        ${htmlList1}
+    </ul>
+
+    <ul class="modal-menu-list" style="display: none" id="modal-page-3">
         ${htmlList2}
     </ul>
 
@@ -85,5 +80,6 @@ const modal = new Modal(`
         Cancel</button>
     <br>
 </div>`);
+modal.tabs = 3;
 
 module.exports = modal;

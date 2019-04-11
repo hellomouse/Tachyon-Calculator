@@ -8,5 +8,5 @@ module.exports = {
     display: require('./src/display'),
     expensive: require('./src/expensive'),
     nonmath: require('./src/nonmath'),
-    random: require('./src/random')
+    random: require('./src/random'),
 };

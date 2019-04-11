@@ -3,6 +3,8 @@
 'use strict';
 
 const math = require('mathjs');
+const path = require('path');
+const nerdamer = require(path.dirname(require.resolve('nerdamer')) + '/all.js');
 const state = require('../../../../src/state.js');
 const angleTotals = state.degTypes;
 
@@ -71,6 +73,53 @@ function propToExpected(total, proportions) {
     return proportions.map(x => x * total);
 }
 
+/**
+ * Fill an array or matrix with a value
+ * @param {array} arr    Array or matrix
+ * @param {number} value Value to fill
+ */
+function fill(arr, value) {
+    /* @help Fill a matrix or list with a value */
+    return math.map(arr, () => value);
+}
+
+/**
+ * Cumulative sum array of an array
+ * @param {array} arr Array of numbers
+ */
+function cumSum(arr) {
+    /* @help Cumulative sum list */
+    let curSum = 0;
+    let ans = [];
+
+    arr.forEach(num => {
+        if (Number.isNaN(num))
+            throw new TypeError('All elements of list must be a number');
+        curSum += math.number(num);
+        ans.push(curSum);
+    });
+    return ans;
+}
+
+/**
+ * Difference between consecutive elements array of an array
+ * @param {array} arr Array of numbers
+ */
+function deltaList(arr) {
+    /* @help Get difference between consecutive terms */
+    let ans = [];
+    if (!Array.isArray(arr))
+        arr = arr.toArray();
+
+    arr.forEach((num, i) => {
+        if (Number.isNaN(num))
+            throw new TypeError('All elements of list must be a number');
+        if (i === 0) return;
+        ans.push(math.number(num) - math.number(arr[i - 1]));
+    });
+    return ans;
+}
+
 module.exports = {
     percentDifference: percentDifference,
     perDiff: percentDifference,
@@ -85,10 +134,37 @@ module.exports = {
     /* Conversions */
     rectToPolar: function(x, y) {
         /* @help Convert (x, y) to polar (r, theta) */
+        if (math.type.isComplex(x)) {
+            y = x.im;
+            x = x.re;
+        }
         return [math.sqrt(x * x + y * y), convertToCurrentDegType(math.atan2(y, x))];
     },
     polarToRect: function(r, theta) {
         /* @help Convert (r, theta) to rect (x, y) */
         return [r * math.cos(theta), r * math.sin(theta)];
+    },
+    angle: function(num) {
+        /* @help Get the angle of a complex number */
+        return convertToCurrentDegType(math.atan2(num.im, num.re));
+    },
+    complexFromPolar: function(r, theta) {
+        /* @help Create a complex number from polar */
+        return math.type.Complex.fromPolar(r, theta);
+    },
+    fill: fill,
+    cumSum: cumSum,
+    deltaList: deltaList,
+    fPart: function(x) {
+        /* @help Get the fractional part of a number */
+        return math.abs(x) - math.floor(math.abs(x));
+    },
+    solve: function(eq, variable) {
+        /* @help Solve an equation for variable, or a system (Pass a list of equations) */
+        if (!Array.isArray(eq))
+            eq = eq.toArray();
+        if (!variable)
+            return nerdamer.solveEquations(eq).map(x => `${x[0]} = ${x[1]}`).join('<br>');
+        return nerdamer.solveEquations(eq, variable).join(', ');
     }
 };

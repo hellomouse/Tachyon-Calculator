@@ -3,7 +3,27 @@
 'use strict';
 
 const math = require('mathjs');
+const integrate = require('integrate-adaptive-simpson');
+const Algebrite = require('algebrite');
+const numbers = require('numbers');
+const mnr = require('modified-newton-raphson');
 const state = require('../../../../src/state.js');
+
+const INTEGRAL_ERROR = 1e-8;
+const DERIVATIVE_H = 1e-15;
+
+const compileFuncFromString = func => {
+    let temp = math.parse(func).compile();
+    return (x, variable) => {
+        let scope = {};
+        if (typeof variable === 'string')
+            scope[variable] = x;
+        else if (variable === undefined) scope['x'] = x;
+        else scope = variable;
+
+        return math.number(temp.eval(scope));
+    };
+};
 
 /* Let renderer load first */
 let renderer;
@@ -22,22 +42,42 @@ const derivativeSymbolic = math.derivative;
  */
 function derivative(expression, variable='x', point=null, level=1) {
     /* @help Compute the nth derivative, optionally at a point */
+
+    if (!expression)
+        throw new Error('Expression needs to be given');
+    
+    let ctx = {};
+    /* Quick way to check if point is an object. If it
+     * is set the context to point directly */
+    if (point !== null && point !== undefined) {
+        if (point[variable] !== undefined) ctx = point;
+        else ctx[variable] = point;
+    }
+
     let start = new Date();
     for (let i = 0; i < level; i++) {
         if (new Date() - start > state.maxFuncRunTime) {
             renderer.addData(`<span class="error-msg"><b>Error: </b>Function timed out, only could compute ${i} th derivative</span>`, true);
             break;
         }
-        expression = derivativeSymbolic(expression, variable);
+        try {
+            expression = derivativeSymbolic(expression, variable);
+        } catch(e) {
+            if (e.message.includes('is not supported by derivative') && level === 1 && ctx !== {}) {
+                /* Function can be approximated by a limit */
+                let initialX = math.number(ctx[variable]);
+
+                ctx[variable] = initialX - DERIVATIVE_H;
+                let f1 = math.number(math.eval(expression.toString(), ctx));
+                ctx[variable] = initialX + DERIVATIVE_H;
+                let f2 = math.number(math.eval(expression.toString(), ctx));
+
+                return (f1 + f2) / (2 * DERIVATIVE_H);
+            }
+        }
     }
     if (point === null || point === undefined) return expression;
 
-    let ctx = {};
-    /* Quick way to check if point is an object. If it
-     * is set the context to point directly */
-    if (typeof point === 'object') ctx = point;
-    else ctx[variable] = point;
-    
     /* Multivariable functions need an object as the context */
     try { return math.eval(expression.toString(), ctx); } 
     catch(e) {
@@ -92,6 +132,31 @@ function limit(expression, point, dir='middle') {
             throw new Error('Function must be in terms of the variable x');
         throw e;
     }
+}
+
+/**
+ * Calculate a definite or indefinite integral
+ * @param {string} func     Function expression
+ * @param {number} start    Low bound (Optional)
+ * @param {number} end      High bound (Required if start is defined) 
+ * @param {string} variable Variable to integrate with respect to
+ */
+function integral(func, start, end, variable='x') {
+    /* @help Compute either a definite or indefinite integral */
+    if (start && !end)
+        throw new Error('End value must be defined');
+
+    /* Definite integral */
+    if (start && end) {
+        start = math.number(start);
+        end = math.number(end);
+        func = compileFuncFromString(func, variable);
+        
+        return integrate(func, start, end, INTEGRAL_ERROR);
+    }
+
+    /* Indefinite integral */
+    return Algebrite.integral(Algebrite.eval(func)).toString(); 
 }
 
 /**
@@ -193,21 +258,52 @@ function curl(g, F) {
     /* Gradient(g) x F */
 }
 
+/**
+ * Estimate root using newton-Raphson method
+ * @param {string} func     Expression
+ * @param {number} guess    Initial guess
+ * @param {string} variable Variable of func
+ */
+function newtonRaphson(func, guess, variable='x') {
+    /* @help Estimate a root using the newton-raphson method */
+    func = compileFuncFromString(func, variable);
+    return mnr(func, math.number(guess));
+}
 
-// integral sum alias
-// indefinite integral
-// line integral
-// reieman sums
+/**
+ * Compute a riemann sum of a function
+ * @param {string} expression  Expr to eval
+ * @param {number} start       Start value
+ * @param {number} end         End value
+ * @param {number} divisions   Number of subdivisions
+ * @param {string} corner      Corner to subdivide
+ */
+function Riemann(expression, start, end, divisions, corner='left') {
+    /* @help Compute riemann sum of func of x, corner can be 'left', 'right' or 'middle' */
+    const samplers = {
+        left: undefined, // Default is left
+        right: (a, b) => b,
+        middle: (a, b) => (a + b) / 2
+    };
+
+    let func = compileFuncFromString(expression);
+    return numbers.calculus.Riemann(func, start, end, divisions, samplers[corner]);
+}
+
 // largrange error bound
 // min/max of function (override with array)
 // curl and divergence
 // runge kutta
 // eulers method
+// runge kutta
 
 module.exports = {
     derivative: derivative,
     gradient: gradient,
     limit: limit,
     taylorSeries: taylorSeries,
-    summation: summation
+    summation: summation,
+    integral: integral,
+    newtonRaphson: newtonRaphson,
+    Riemann: Riemann
 };

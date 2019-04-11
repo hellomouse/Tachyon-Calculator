@@ -1,8 +1,13 @@
-/* Patching for numerics.js */
+/* Patching for numerics.js
+ * THIS FILE IS CURRENTLY UNUSED */
 
 'use strict';
 
 const numeric = require('numeric');
+
+/* Remove numeric all and any */
+delete numeric.all;
+delete numeric.any;
 
 /* Removal of unnecessary functions */
 for (let key of Object.keys(numeric)) {
