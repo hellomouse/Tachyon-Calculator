@@ -1,5 +1,5 @@
 'use strict';
-/* global toggleSideMenu:true */
+/* global closeSideNavIfOpen:true */
 
 const page = document.getElementById('page-overlay');
 const state = require('../state.js');
@@ -28,10 +28,8 @@ class Page {
      */
     show(li) {
         /* Check not already open */
-        if (state.page && state.page.name === this.name && page.innerHTML) {
-            toggleSideMenu();
+        if (state.page && state.page.name === this.name && page.innerHTML)
             return;
-        }
 
         if (state.modal) state.modal.hide();
         if (state.page) state.page.hide();
@@ -43,7 +41,7 @@ class Page {
         page.innerHTML = this.html;
 
         this.onload();
-        toggleSideMenu();
+        closeSideNavIfOpen();
     }
 
     /** 

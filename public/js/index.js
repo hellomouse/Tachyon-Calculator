@@ -1,7 +1,7 @@
 /* Main calculator JS utilities 
  * This file is loaded directly, not required */
 
-/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal configMathNumber cycleAngleMode toggleSideMenu */
+/* exported d3 winFunc addCharAt removeChunk addCharAt addChar2nd clearInput hideAutocompleteArea removeEnd removeChunk openModal configMathNumber cycleAngleMode toggleSideMenu closeSideNavIfOpen */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "[d3|winFunc]" }] */
 
 'use strict';
@@ -213,4 +213,12 @@ function cycleAngleMode() {
 function toggleSideMenu() {
     let nav = document.getElementById('side-nav');
     nav.style.left = !nav.style.left || nav.style.left === '-200px' ? '50px' : '-200px';
+}
+
+/**
+ * Closes the side nav if open
+ */
+function closeSideNavIfOpen() {
+    let nav = document.getElementById('side-nav');
+    nav.style.left = '-200px';
 }

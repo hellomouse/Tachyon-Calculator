@@ -126,8 +126,8 @@
                             <sup class="second-label">nCr</sup><br>
                             nPr
                         </button></td>
-                        <td><button class="in-btn func-btn has-second-btn" onclick="openModal('modal.rand', 'modal.func.menu')">
-                            <sup class="second-label">Uniform</sup><br>
+                        <td><button class="in-btn func-btn has-second-btn" onclick="openModal('modal.rand', 'modal.calc')">
+                            <sup class="second-label">Calculus</sup><br>
                             Rand
                         </button></td>
                         <td><button class="in-btn has-second-btn" onclick="openModal('modal.const.menu', 'modal.func.menu')">
@@ -142,8 +142,8 @@
                             <sup class="second-label">Draw</sup><br>
                             Prgm
                         </button></td>
-                        <td><button class="in-btn has-second-btn" onclick="openModal('modal.math', 'modal.test')">
-                            <sup class="second-label">Test</sup><br>
+                        <td><button class="in-btn has-second-btn" onclick="openModal('modal.math', 'modal.logic')">
+                            <sup class="second-label">Logic</sup><br>
                             Math
                         </button></td>
                         <td><button class="in-btn num-btn" onclick="addChar('4')">4</button></td>
@@ -199,7 +199,7 @@
                     style="float: right; margin-right: 20px; margin-top: 15px">-->
             </div>
             <ul id="side-nav-bar-menu" class="output-menu">
-                <li class="active" onclick="require('./src/state.js').page.hide(this)"><img src="public/img/side-nav/sci.png"></li>
+                <li class="active" onclick="require('./src/state.js').page.hide(this); closeSideNavIfOpen()"><img src="public/img/side-nav/sci.png"></li>
                 <li onclick="require('./src/gui').page.graph2d.show(this)"><img src="public/img/side-nav/graph.png"></li>
             </ul>
         </div>

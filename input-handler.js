@@ -1,7 +1,7 @@
 /* Executed by the renderer process
 * Handles main HTML code submission */
 
-/*global hideAutocompleteArea removeChunk addCharAt cycleAngleMode _hidden:true*/
+/*global hideAutocompleteArea removeChunk addCharAt cycleAngleMode _hidden toggleSideMenu:true*/
 
 require('cache-require-paths');
 require('app-module-path').addPath('./packages'); // Add 'packages' as alt folder for modules
@@ -100,9 +100,14 @@ mainInput.addEventListener('input', event => {
 /* Keep text area focused if on the 
  * main page, so if user clicks a button
  * it doesn't lose focus */
-document.body.addEventListener('click', () => {
+document.body.addEventListener('click', e => {
     if (state.currentPage === 'main')
         mainInput.focus();
+
+    let sideNav = document.getElementById('side-nav');
+    let sideNavLeft = +sideNav.style.left.replace('px', '');
+    if (sideNavLeft > 0 && e.clientX > sideNavLeft + sideNav.offsetWidth)
+        toggleSideMenu();
 });
 
 /* Global key intercepts */

@@ -8,8 +8,8 @@ const Modal = require('../modal.js');
 const pages = {
     Math: {
         nthRoot: 'Get the principle nth root of a number',
-        fMin: 'TODO',
-        fMax: 'TODO',
+        fmin: 'Minimize a 1D unimodal function on an interval',
+        fmax: 'Maximize a 1D unimodal function on an interval',
         derivative: 'Calculate the derivative of a function, optionally at a value',
         integrate: 'Calculate a definite or indefinite integral of a function',
         summation: 'Sum an expression from a to b',

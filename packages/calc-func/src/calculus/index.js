@@ -4,6 +4,7 @@
 
 const math = require('mathjs');
 const integrate = require('integrate-adaptive-simpson');
+const nerdamer = require('nerdamer');
 const Algebrite = require('algebrite');
 const numbers = require('numbers');
 const mnr = require('modified-newton-raphson');
@@ -12,10 +13,11 @@ const state = require('../../../../src/state.js');
 const INTEGRAL_ERROR = 1e-8;
 const DERIVATIVE_H = 1e-15;
 const SMALL_NUMBER = math.bignumber('1e-15');
+const OPTIMIZATION_INTERMEDIATE_RATIO = 0.3819660112501051517954;
 
-const compileFuncFromString = func => {
+const compileFuncFromString = (func, variable) => {
     let temp = math.parse(func).compile();
-    return (x, variable) => {
+    return x => {
         let scope = {};
         if (typeof variable === 'string')
             scope[variable] = x;
@@ -39,9 +41,8 @@ const derivativeSymbolic = math.derivative;
  */
 function derivative(expression, variable='x', point=null, level=1) {
     /* @help Compute the nth derivative, optionally at a point */
-
-    if (!expression)
-        throw new Error('Expression needs to be given');
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
     
     let ctx = {};
     /* Quick way to check if point is an object. If it
@@ -114,8 +115,8 @@ function gradient(expression, point=null, variables=['x','y','z']) {
  */
 function limit(expression, point, dir='middle') {
     /* @help Approximate the limit at a point, dir can be 'left', 'middle' or 'right' */
-    if (!expression)
-        throw new Error('Function must be supplied');
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
     if (!['left', 'middle', 'right'].includes(dir))
         throw new Error('Dir must be \'left\', \'middle\' or \'right\'');
 
@@ -150,8 +151,10 @@ function limit(expression, point, dir='middle') {
  */
 function integral(func, start, end, variable='x') {
     /* @help Compute either a definite or indefinite integral */
-    if (start && !end)
+    if (start !== undefined && (end === undefined || end === null))
         throw new Error('End value must be defined');
+    if (!func || typeof func !== 'string')
+        throw new Error('Function must be supplied as a string');
 
     /* Definite integral */
     if (start && end) {
@@ -175,6 +178,9 @@ function integral(func, start, end, variable='x') {
  */
 function taylorSeries(expression, center=0, terms=6, point=null) {
     /* @help Get a centered taylor series optionally evaluated at a point */
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
+
     let coeff = [];
     let start = new Date();
 
@@ -235,9 +241,13 @@ function taylorSeries(expression, center=0, terms=6, point=null) {
  * @param {number} start      Start value
  * @param {number} end        End value
  * @param {number} inc        Increment value
+ * @param {string} variable   Variable to increment
  */
-function summation(expression, start, end, inc=1) {
+function summation(expression, start, end, inc=1, variable='x') {
     /* @help Sum a series from start to end with increment */
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
+
     let sum = math.bignumber(0);
     let startTime = new Date();
 
@@ -245,24 +255,149 @@ function summation(expression, start, end, inc=1) {
     end = math.number(end);
     inc = math.number(inc);
 
+    if (inc === 0) throw new Error('Increment cannot be zero');
+    if ((inc > 0 && end < start) ||
+        (inc < 0 && end > start)) throw new Error('Sum does not converge');
+    if (end < start && inc < 0) {
+        let temp = end;
+        end = start;
+        start = temp;
+        inc = Math.abs(inc);
+    }
+
     for (let i = start; i <= end; i += inc) {
         if (new Date() - startTime > state.maxFuncRunTime) {
             renderer.addData(`<span class="error-msg"><b>Error: </b>Function timed out, only could compute up to x = ${i}</span>`, true);
             break;
         }
-        sum = sum.add(math.bignumber(math.eval(expression, { x : i })));
+        let args = {};
+        args[variable] = i;
+        sum = sum.add(math.bignumber(math.eval(expression, args)));
     }
     return sum;
 }
 
-function funcCrossProduct(v1, v2) {
-    // https://mathjs.org/docs/datatypes/matrices.html
-    // subset
-    
+/**
+ * Product a series
+ * @param {string} expression Expression, ie 'x^2'
+ * @param {number} start      Start value
+ * @param {number} end        End value
+ * @param {number} inc        Increment value
+ * @param {string} variable   Variable to increment
+ */
+function seriesProduct(expression, start, end, inc = 1, variable = 'x') {
+    /* @help product a series from start to end with increment */
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
+
+    let prod = math.bignumber(1);
+    let startTime = new Date();
+
+    start = math.number(start);
+    end = math.number(end);
+    inc = math.number(inc)
+
+    if ((inc > 0 && end < start) ||
+        (inc < 0 && end > start)) throw new Error('Product does not converge');
+    if (end < start && inc < 0) {
+        let temp = end;
+        end = start;
+        start = temp;
+        inc = Math.abs(inc);
+    }
+
+    for (let i = start; i <= end; i += inc) {
+        if (new Date() - startTime > state.maxFuncRunTime) {
+            renderer.addData(`<span class="error-msg"><b>Error: </b>Function timed out, only could compute up to x = ${i}</span>`, true);
+            break;
+        }
+        let args = {};
+        args[variable] = i;
+        prod = prod.mul(math.bignumber(math.eval(expression, args)));
+    }
+    return prod;
 }
 
-function curl(g, F) {
-    /* Gradient(g) x F */
+/**
+ * Helper for cross product
+ * @param {array} v1 Vector 1
+ * @param {array} v2 vector 2
+ */
+function funcCrossProduct(v1, v2) {
+    if (v1.length !== v2.length)
+        throw new Error('Both vectors must be of the same length');
+    if (![2,3].includes(v1.length) || ![2,3].includes(v2.length))
+        throw new Error('Only 2D and 3D vector fields are supported');
+    
+    if (v1.length === 2) 
+        return Algebrite.simplify(`${v1[0]} * ${v2[1]} - ${v1[1]} * ${v2[0]}`);
+
+    return [
+        Algebrite.simplify(`${v1[1]} * ${v2[2]} - ${v1[2]} * ${v2[1]}`),
+        Algebrite.simplify(`${v2[0]} * ${v1[2]} - ${v1[0]} * ${v2[2]}`),
+        Algebrite.simplify(`${v1[0]} * ${v2[1]} - ${v1[1]} * ${v2[2]}`)];
+}
+
+/**
+ * Compute curl of vector field
+ * @param {array} F Vector field
+ * @param {array} point Point to eval at
+ * @param {array} variables Variables
+ */
+function curl(F, point=null, variables=['x', 'y', 'z']) {
+    /* @help Compute curl of vector field F, optionally at a point */
+    if (!Array.isArray(F))
+        F = F.toArray().map(x => x.toString());
+    if (point !== null && !Array.isArray(point))
+        point = point.toArray().map(x => x.toString());
+
+    if (point !== null && point.length !== F.length)
+        throw new Error('Point must be same length as vector field');
+
+    let gr = [];
+    for (let i = 0; i < F.length; i++)
+        gr.push(derivative(F[i], variables[i]).toString());
+
+    let result = funcCrossProduct(gr, F);
+    if (point === null) return result;
+
+    let scope = {};
+    for (let i = 0; i < point.length; i++)
+        scope[variables[i]] = math.number(point[i]);
+
+    if (Array.isArray(result))
+        return result.map(x => math.eval(x.toString(), scope));
+    return math.eval(result.toString(), scope);
+}
+
+/**
+ * Compute div of vector field
+ * @param {array} F Vector field
+ * @param {array} point Point to eval at
+ * @param {array} variables Variables
+ */
+function div(F, point = null, variables = ['x', 'y', 'z']) {
+    /* @help Compute divergence of vector field F, optionally at a point */
+    if (!Array.isArray(F))
+        F = F.toArray().map(x => x.toString());
+    if (point !== null && !Array.isArray(point))
+        point = point.toArray().map(x => x.toString());
+
+    if (point !== null && point.length !== F.length)
+        throw new Error('Point must be same length as vector field');
+
+    let gr = [];
+    for (let i = 0; i < F.length; i++)
+        gr.push(derivative(F[i], variables[i]).toString());
+
+    let stringToEval = gr.map((x, i) => `${x} * ${F[i]}`).join('+');
+    let result = Algebrite.simplify(stringToEval);
+    if (point === null) return result;
+
+    let scope = {};
+    for (let i = 0; i < point.length; i++)
+        scope[variables[i]] = math.number(point[i]);
+    return math.eval(result.toString(), scope);
 }
 
 /**
@@ -273,6 +408,9 @@ function curl(g, F) {
  */
 function newtonRaphson(func, guess, variable='x') {
     /* @help Estimate a root using the newton-raphson method */
+    if (!func || typeof func !== 'string')
+        throw new Error('Function must be supplied as a string');
+
     func = compileFuncFromString(func, variable);
     return mnr(func, math.number(guess));
 }
@@ -297,12 +435,133 @@ function Riemann(expression, start, end, divisions, corner='left') {
     return numbers.calculus.Riemann(func, start, end, divisions, samplers[corner]);
 }
 
-// largrange error bound
-// min/max of function (override with array)
-// curl and divergence
-// runge kutta
-// eulers method
-// runge kutta
+/**
+ * Minimize a 1D unimodal function on an interval
+ * @param {string} expression Func to minimize
+ * @param {number} start      Start x
+ * @param {number} end        Start y
+ * @param {string} variable   Variable of the function
+ * @param {number} maxError   Max error allowed
+ */
+function fmin(expression, start, end, variable='x', maxError=0.0001) {
+    /* @help Get x value where a 1D unimodal function has a min on an interval */
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
+
+    const f = compileFuncFromString(expression, variable);
+    start = math.number(start);
+    end = math.number(end);
+    maxError = math.number(maxError);
+
+    if (maxError <= 0)
+        throw new Error('maxError must be a number greater than 0');
+    if (end <= start)
+        throw new Error('End bound needs to be greater than start');
+
+    return optimizerHelper(f, start, end, maxError, true);
+}
+
+/**
+ * Maximize a 1D unimodal function on an interval
+ * @param {string} expression Func to maximize
+ * @param {number} start      Start x
+ * @param {number} end        Start y
+ * @param {string} variable   Variable of the function
+ * @param {number} maxError   Max error allowed
+ */
+function fmax(expression, start, end, variable = 'x', maxError = 0.0001) {
+    /* @help Get x value where a 1D unimodal function has a max on an interval */
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
+
+    const f = compileFuncFromString(expression, variable);
+    start = math.number(start);
+    end = math.number(end);
+    maxError = math.number(maxError);
+
+    if (maxError <= 0)
+        throw new Error('maxError must be a number greater than 0');
+    if (end <= start)
+        throw new Error('End bound needs to be greater than start');
+
+    return optimizerHelper(f, start, end, maxError, false);
+}
+
+/**
+ * Helper for fmin and fmax
+ * @param {function} func Function
+ * @param {number} start Start bound
+ * @param {number} end End bound
+ * @param {nunber} maxError Largest error
+ * @param {number} min Minimize? (Or maximize)
+ */
+function optimizerHelper(func, start, end, maxError, min=true) {
+    const size = end - start;
+    if (size < maxError) return start;
+
+    const a1 = size * OPTIMIZATION_INTERMEDIATE_RATIO + start;
+    const b1 = end - size * OPTIMIZATION_INTERMEDIATE_RATIO;
+    const f1 = func(a1);
+    const f2 = func(b1);
+
+    if (f1 === f2)
+        return optimizerHelper(func, a1, b1, maxError, min);
+    if (f1 > f2) {
+        if (min) return optimizerHelper(func, a1, end, maxError, min);
+        return optimizerHelper(func, start, b1, maxError, min);
+    }
+    else {
+        if (min) return optimizerHelper(func, start, b1, maxError, min);
+        return optimizerHelper(func, a1, end, maxError, min);
+    }
+} 
+
+/**
+ * Calculate the lagrange error bound
+ * @param {string} func Function
+ * @param {number} x x to eval at
+ * @param {number} center Center of expansion
+ * @param {number} degree Degree of polyonimal
+ * @param {number} guess Guess between x and center
+ */
+function lagrangeErrorBound(func, x, center, degree, guess) {
+    /* @help Calculate a lagrange error bound of a function in x */
+    if (!func || typeof func !== 'string')
+        throw new Error('Function must be supplied as a string');
+
+    const f = compileFuncFromString(func, 'x');
+    x = math.number(x);
+    center = math.number(center);
+    degree = math.number(degree);
+    guess = math.number(guess);
+
+    /* Make sure x < center */
+    if (x > center) [x, center] = [center, x];
+    
+    /* Make sure degree is an integer >= 0 */
+    if (Math.floor(degree) !== degree || degree < 0)
+        throw new Error('Degree must be a non-negative integer');
+    
+    /* Make sure guess is between x and center */
+    if (guess < x || guess > center)
+        throw new Error('Guess must be between x and center');
+    
+    const d = degree + 1;
+    return Math.abs(f(guess) * (x - center) ** d / math.number(math.factorial(d)));
+}
+
+/**
+ * Get partial fraction decomposition
+ * @param {string} expression Expr to eval
+ * @param {string} variable Variable of expr
+ */
+function partfrac(expression, variable='x') {
+    /* @help Partial fraction decomposition of a number */
+    if (!expression || typeof expression !== 'string')
+        throw new Error('Function must be supplied as a string');
+
+    return nerdamer.partfrac(expression, variable).toString();
+}
 
 module.exports = {
     derivative: derivative,
@@ -312,5 +571,12 @@ module.exports = {
     summation: summation,
     integral: integral,
     newtonRaphson: newtonRaphson,
-    Riemann: Riemann
+    Riemann: Riemann,
+    fmin: fmin,
+    fmax: fmax,
+    lagrangeErrorBound: lagrangeErrorBound,
+    curl: curl,
+    div: div,
+    partfrac: partfrac,
+    seriesProduct: seriesProduct
 };
