@@ -28,7 +28,7 @@
     "get-function-arguments": "^1.0.0",
     "humanize-duration": "^3.18.0",
     "integrate-adaptive-simpson": "^1.1.1",
-    "mathjs": "^5.6.0",
+    "mathjs": "^7.5.1",
     "modified-newton-raphson": "^1.0.2",
     "mousetrap": "^1.6.3",
     "nerdamer": "^0.8.4",
